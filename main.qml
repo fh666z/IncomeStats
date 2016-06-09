@@ -6,6 +6,7 @@ ApplicationWindow {
     visible: true
     width: 800
     height: 600
+    title: "Income Stats"
 
     MouseArea {
         anchors.fill: parent
@@ -18,4 +19,10 @@ ApplicationWindow {
         text: qsTr("Hello World")
         anchors.centerIn: parent
     }
+
+    statusBar: StatusBar {
+        id: appStatusBar
+
+    }
+
 }
