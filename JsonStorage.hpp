@@ -24,12 +24,11 @@ public:
     virtual ~JSonStorage();
 
 private:
-    bool initFileHeader();
-
-private:
     QFile           *m_storage_file;
     QJsonDocument   *m_json_doc;
 
+private:
+    bool initFileHeader();
     void createJsonDocument();
 };
 
