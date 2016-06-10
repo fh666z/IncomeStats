@@ -5,13 +5,16 @@
 
 #include "Storage.hpp"
 
+class QFile;
+class QJsonDocument;
+
 class JSonStorage : public Storage
 {
 public:
     static void create();
 
-    bool initialize(QString file_name);
-    bool open();
+    bool prepareStorage();
+    bool open(QString file_name);
     bool close();
 
     bool writeRecord(IncomeOrder& new_order);
@@ -19,8 +22,15 @@ public:
 
     JSonStorage();
     virtual ~JSonStorage();
-protected:
 
+private:
+    bool initFileHeader();
+
+private:
+    QFile           *m_storage_file;
+    QJsonDocument   *m_json_doc;
+
+    void createJsonDocument();
 };
 
 #endif // JSONSTORAGE_H

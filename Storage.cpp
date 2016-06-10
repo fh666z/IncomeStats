@@ -4,6 +4,7 @@
 #include "Storage.hpp"
 
 Storage* Storage::m_pDataStorage = nullptr;
+StorageState Storage::m_state = StorageState::NotInitialized;
 
 Storage *Storage::getStorage()
 {
@@ -19,6 +20,11 @@ Storage *Storage::getStorage()
 bool Storage::exists()
 {
     return (m_pDataStorage != nullptr);
+}
+
+StorageState Storage::getState()
+{
+    return m_state;
 }
 
 Storage::Storage()
