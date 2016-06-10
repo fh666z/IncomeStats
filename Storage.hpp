@@ -15,7 +15,7 @@ public:
     bool exists();
 
     virtual bool prepareStorage() = 0;
-    virtual bool open(QString init_string) = 0;
+    virtual bool open() = 0;
     virtual bool close() = 0;
 
     virtual bool writeRecord(IncomeOrder& new_order) = 0;

@@ -1,12 +1,14 @@
 #include <QDir>
 #include <QFile>
-#include <qiodevice.h>
+#include <QSaveFile>
 #include <QStandardPaths>
 #include <QDebug>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
+#include <QCryptographicHash>
 
+#include "Definitions.hpp"
 #include "JsonStorage.hpp"
 #include "IncomeOrder.hpp"
 
@@ -20,8 +22,8 @@
 // Output:
 //--------------------------------------------------------------------------------------------------
 JSonStorage::JSonStorage() :
-    m_storage_file(nullptr),
-    m_json_doc(nullptr)
+    m_storageFile(nullptr),
+    m_jsonDoc(nullptr)
 {
 
 }
@@ -34,6 +36,9 @@ JSonStorage::JSonStorage() :
 JSonStorage::~JSonStorage()
 {
     close();
+
+    delete m_jsonDoc;
+    delete m_storageFile;
 }
 
 
@@ -91,13 +96,13 @@ IncomeOrder& JSonStorage::readRecord()
 //--------------------------------------------------------------------------------------------------
 bool JSonStorage::prepareStorage()
 {
-    m_storage_file = new QFile();
+    m_storageFile = new QSaveFile();
 
-    bool success = m_storage_file != nullptr;
+    bool success = m_storageFile != nullptr;
     if (success)
     {
         m_state = StorageState::Prepared;
-        this->open("storage.json");
+        this->open();
     }
     else
     {
@@ -112,33 +117,17 @@ bool JSonStorage::prepareStorage()
 // Input:
 // Output:
 //--------------------------------------------------------------------------------------------------
-bool JSonStorage::open(QString file_name)
+bool JSonStorage::open()
 {
-    QDir storage_dir(QStandardPaths::displayName(QStandardPaths::AppLocalDataLocation));
-    if (storage_dir.exists() == false)
+    bool success = createJsonDocumentFromFile();
+
+    if (false == checkHeader())
     {
-        storage_dir.mkdir(storage_dir.absolutePath());
-    }
-    QString file_path = QString(storage_dir.absolutePath() + '/' + file_name);
-
-    m_storage_file->setFileName(file_path);
-    bool success = m_storage_file->open(QFile::ReadWrite | QFile::Text);
-    if (success)
-    {
-        // File is empty, so JSon must be initialized with header
-        if (m_storage_file->size() == 0)
-        {
-            success = initFileHeader();
-        }
-
-        createJsonDocument();
-
-        m_state = StorageState::Opened;
+        // If header is wrong or missing means file is corrupted, so it needs to be truncated.
+        success = initFileHeader(QFile::Truncate);
     }
     else
-    {
-        // TODO: report error
-    }
+        m_state = StorageState::Opened;
 
     return success;
 }
@@ -150,14 +139,26 @@ bool JSonStorage::open(QString file_name)
 //--------------------------------------------------------------------------------------------------
 bool JSonStorage::close()
 {
-    if (m_storage_file->isOpen())
+    if (m_storageFile->isOpen())
     {
-        m_storage_file->close();
+        QByteArray data = m_storageFile->readAll();
+
+        QJsonObject::iterator json_magic = m_jsonDoc->object().find(JSON_KEY_HEADER_MAGIC);
+        QJsonValueRef magicRef = json_magic.value();
+
+        //        magicRef = QCryptographicHash::hash(data, QCryptographicHash::Sha3_384);
+        magicRef = "Shano";
+
+        auto var = QCryptographicHash::hash(data, QCryptographicHash::Sha3_384);
+        qDebug() << "Close storage: " << var << endl;
+
+        m_storageFile->commit();
         m_state = StorageState::Closed;
     }
 
     return true;
 }
+
 
 //==================================================================================================
 // Private methods
@@ -167,18 +168,23 @@ bool JSonStorage::close()
 // Input:
 // Output:
 //--------------------------------------------------------------------------------------------------
-bool JSonStorage::initFileHeader()
+bool JSonStorage::initFileHeader(auto flags)
 {
     QJsonObject json_header;
-    json_header["title"]        = "IncomStats JSon storage file";
-    json_header["appVersion"]   = "1.0";
-    json_header["records"]      = QJsonArray();
-    QJsonDocument doc(json_header);
+    json_header[JSON_KEY_HEADER_TITLE]   = JSON_VALUE_HEADER_TITLE;
+    json_header[JSON_KEY_HEADER_APP_VER] = JSON_VALUE_HEADER_APP_VER;
+    json_header[JSON_KEY_HEADER_MAGIC]   = "";
+    json_header[JSON_KEY_RECORDS]        = QJsonArray();
 
-    qint64 written = m_storage_file->write(doc.toJson());
-    bool success = (written == doc.toJson().size());
+    bool success = m_storageFile->open(flags);
     if (success)
-        m_storage_file->flush();
+    {
+        QJsonDocument doc(json_header);
+        qint64 written = m_storageFile->write(doc.toJson());
+        success = (written == doc.toJson().size());
+
+        m_storageFile->commit();
+    }
 
     return success;
 }
@@ -188,17 +194,101 @@ bool JSonStorage::initFileHeader()
 // Input:
 // Output:
 //--------------------------------------------------------------------------------------------------
-void JSonStorage::createJsonDocument()
+QByteArray JSonStorage::readJsonFromFile()
 {
-    m_json_doc = new QJsonDocument(QJsonDocument::fromJson(m_storage_file->readAll()));
-    QJsonArray parse_obj;
+    QByteArray dataFromFile = m_storageFile->readAll();
+    // TODO: Improve reading to load in RAM only part of the file!!!
 
-    qDebug() << m_json_doc->isArray() << endl;
-//    parse_obj = m_json_doc->array();
-
-
-//    qDebug() << parse_obj[0].toString() << endl;
+    return dataFromFile;
 }
 
+//--------------------------------------------------------------------------------------------------
+// Purpose:
+// Input:
+// Output:
+//--------------------------------------------------------------------------------------------------
+bool JSonStorage::checkHeader()
+{
+    QJsonObject::iterator json_iter;
+
+    Q_ASSERT_X(m_jsonDoc != nullptr, __func__, "JsonDocument has not been initialized!!!");
+
+    json_iter = m_jsonDoc->object().find(JSON_KEY_HEADER_APP_VER);
+    if (json_iter == m_jsonDoc->object().end())
+        return false;
+
+    json_iter = m_jsonDoc->object().find(JSON_KEY_HEADER_TITLE);
+    if (json_iter == m_jsonDoc->object().end())
+        return false;
+
+    json_iter = m_jsonDoc->object().find(JSON_KEY_HEADER_MAGIC);
+    if (json_iter == m_jsonDoc->object().end())
+        return false;
+
+    json_iter = m_jsonDoc->object().find(JSON_KEY_RECORDS);
+    if (json_iter == m_jsonDoc->object().end())
+        return false;
+
+    return true;
+}
+
+//--------------------------------------------------------------------------------------------------
+// Purpose:
+// Input:
+// Output:
+//--------------------------------------------------------------------------------------------------
+bool JSonStorage::createJsonDocumentFromFile()
+{
+
+    // Choose OS specific writable application folder
+    QDir storage_dir(QStandardPaths::displayName(QStandardPaths::AppLocalDataLocation));
+    if (storage_dir.exists() == false)
+    {
+        // Create folder if it doesn't exist otherwise File cannot be created
+        storage_dir.mkdir(storage_dir.absolutePath());
+    }
+
+    // Create absolute file path
+    QString file_path = QString(storage_dir.absolutePath() + '/' + JSON_STORAGE_FILENAME);
+    m_storageFile->setFileName(file_path);
+
+    QFileInfo check_file(file_path);
+   // check if file exists and if yes: Is it really a file and no directory?
+   if (!check_file.exists())
+        initFileHeader(JSON_OPEN_FILE_FLAGS);
+
+    QByteArray data;
+    bool success = m_storageFile->open(JSON_OPEN_FILE_FLAGS);
+    if (success)
+    {
+        // Read all data from file so it can be closed
+        data = readJsonFromFile();
+        // Close the file immediately after data has been read
+        m_storageFile->commit();
+    }
+    else
+    {
+        // TODO: report error
+        success = false;
+    }
+
+    // Use the text data to form Json Document
+    QJsonParseError error;
+    m_jsonDoc = new QJsonDocument(QJsonDocument::fromJson(data, &error));
+    qDebug() << __FILE__ << __func__ << ": Parsing Json storage file error:" << error.errorString() << endl;
+
+    // Basic validity check
+    if ((m_jsonDoc->isArray()) || (m_jsonDoc->isNull()))
+    {
+        // Show error
+        qDebug() << "Problem loading data from storage" << endl;
+    }
+
+    qDebug() << m_jsonDoc->toJson() << endl;
+
+
+
+    return success;
+}
 
 

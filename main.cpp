@@ -15,8 +15,8 @@ int main(int argc, char *argv[])
     {
         if (Storage::getState() == StorageState::Opened)
         {
-            IncomeOrder new_income(1000, "10-05-2015", IncomeOrder::IncomeType::Salary, "test");
-            Storage::getStorage()->writeRecord(new_income);
+//            IncomeOrder new_income(1000, "10-05-2015", IncomeOrder::IncomeType::Salary, "test");
+//            Storage::getStorage()->writeRecord(new_income);
             Storage::getStorage()->close();
         }
     }

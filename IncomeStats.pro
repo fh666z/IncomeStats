@@ -19,4 +19,5 @@ include(deployment.pri)
 HEADERS += \
     IncomeOrder.hpp \
     JsonStorage.hpp \
-    Storage.hpp
+    Storage.hpp \
+    Definitions.hpp
