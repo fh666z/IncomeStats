@@ -1,6 +1,5 @@
 #include <QDir>
 #include <QFile>
-#include <QSaveFile>
 #include <QStandardPaths>
 #include <QDebug>
 #include <QJsonDocument>
@@ -96,7 +95,7 @@ IncomeOrder& JSonStorage::readRecord()
 //--------------------------------------------------------------------------------------------------
 bool JSonStorage::prepareStorage()
 {
-    m_storageFile = new QSaveFile();
+    m_storageFile = new QFile();
 
     bool success = m_storageFile != nullptr;
     if (success)
@@ -152,7 +151,7 @@ bool JSonStorage::close()
         auto var = QCryptographicHash::hash(data, QCryptographicHash::Sha3_384);
         qDebug() << "Close storage: " << var << endl;
 
-        m_storageFile->commit();
+        m_storageFile->close();
         m_state = StorageState::Closed;
     }
 
@@ -183,7 +182,7 @@ bool JSonStorage::initFileHeader(auto flags)
         qint64 written = m_storageFile->write(doc.toJson());
         success = (written == doc.toJson().size());
 
-        m_storageFile->commit();
+        m_storageFile->close();
     }
 
     return success;
@@ -264,7 +263,7 @@ bool JSonStorage::createJsonDocumentFromFile()
         // Read all data from file so it can be closed
         data = readJsonFromFile();
         // Close the file immediately after data has been read
-        m_storageFile->commit();
+        m_storageFile->close();
     }
     else
     {

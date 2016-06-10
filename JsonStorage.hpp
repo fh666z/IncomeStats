@@ -5,7 +5,7 @@
 
 #include "Storage.hpp"
 
-class QSaveFile;
+class QFile;
 class QJsonDocument;
 
 class JSonStorage : public Storage
@@ -24,7 +24,7 @@ public:
     virtual ~JSonStorage();
 
 private:
-    QSaveFile       *m_storageFile;
+    QFile           *m_storageFile;
     QJsonDocument   *m_jsonDoc;
 
 private:
