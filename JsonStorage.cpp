@@ -85,9 +85,19 @@ void JSonStorage::writeRecord(int id, double amount, QString date, QString type,
 // Input:
 // Output:
 //--------------------------------------------------------------------------------------------------
-IncomeOrder& JSonStorage::readRecordByID(unsigned id) const
+IncomeOrder* JSonStorage::readRecordByID(int id) const
 {
+    std::vector<IncomeOrder*>::iterator recIter = m_incomeRecords->begin();
 
+    while (recIter != m_incomeRecords->end())
+    {
+        if ((*recIter)->id() == id)
+            return *recIter;
+
+        recIter++;
+    }
+
+    return nullptr;
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -95,9 +105,9 @@ IncomeOrder& JSonStorage::readRecordByID(unsigned id) const
 // Input:
 // Output:
 //--------------------------------------------------------------------------------------------------
-void JSonStorage::readAllRecords(std::vector<IncomeOrder *> &recordsList) const
+std::vector<IncomeOrder *> *JSonStorage::readAllRecords() const
 {
-
+    return m_incomeRecords;
 }
 
 //--------------------------------------------------------------------------------------------------

@@ -23,8 +23,8 @@ public:
 
     virtual void writeRecord(IncomeOrder* new_order) = 0;
     virtual void writeRecord(int id, double amount, QString date, QString type, QString comment) = 0;
-    virtual IncomeOrder& readRecordByID(unsigned id) const = 0;
-    virtual void readAllRecords(std::vector<IncomeOrder*> &recordsList) const = 0;
+    virtual IncomeOrder* readRecordByID(int id) const = 0;
+    virtual std::vector<IncomeOrder*> *readAllRecords() const = 0;
 
 
 protected:

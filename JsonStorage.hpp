@@ -24,8 +24,8 @@ public:
     void writeRecord(IncomeOrder* new_order);
     void writeRecord(int id, double amount, QString date, QString type, QString comment);
 
-    IncomeOrder& readRecordByID(unsigned id) const;
-    void readAllRecords(std::vector<IncomeOrder*> &recordsList) const;
+    IncomeOrder* readRecordByID(int id) const;
+    std::vector<IncomeOrder *> *readAllRecords() const;
 
     JSonStorage();
     virtual ~JSonStorage();

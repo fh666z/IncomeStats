@@ -5,6 +5,8 @@
 #include "JsonStorage.hpp"
 #include "IncomeOrder.hpp"
 
+#include <QDebug>
+
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
@@ -15,7 +17,10 @@ int main(int argc, char *argv[])
     {
         if (Storage::getState() == StorageState::Opened)
         {
-            Storage::getStorage()->writeRecord(0, 1000.0, "10-05-2015", "Salary", "test");
+            Storage::getStorage()->writeRecord(11, 1000.0, "10-05-2015", "Salary", "test");
+
+            IncomeOrder *rec = Storage::getStorage()->readRecordByID(11);
+            qDebug() << "ID: " << rec->id() << " : " << rec->amount() << " : " << rec->typeString() << endl;
             Storage::getStorage()->close();
         }
     }
