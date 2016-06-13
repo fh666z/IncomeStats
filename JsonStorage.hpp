@@ -32,13 +32,13 @@ public:
 
 private:
     QFile           *m_storageFile;
-    QJsonDocument   *m_jsonDoc;
 
 private:
-    void initHeader();
-    bool checkHeader();
-    bool extractAllRecords();
-    bool verifyCreatedJson(QJsonParseError &error);
+    void initHeader(QJsonObject &headerObj);
+    bool checkHeader(const QJsonDocument &doc);
+    void extractAllRecords(const QJsonDocument &doc);
+    bool verifyCreatedJson(const QJsonDocument &doc, QJsonParseError &error);
+    void serializeRecordsToJson(QJsonDocument &doc);
 };
 
 #endif // JSONSTORAGE_H

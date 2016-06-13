@@ -21,8 +21,7 @@
 // Output:
 //--------------------------------------------------------------------------------------------------
 JSonStorage::JSonStorage() :
-    m_storageFile(nullptr),
-    m_jsonDoc(nullptr)
+    m_storageFile(nullptr)
 {
 
 }
@@ -36,7 +35,6 @@ JSonStorage::~JSonStorage()
 {
     close();
 
-    delete m_jsonDoc;
     delete m_storageFile;
 }
 
@@ -89,13 +87,7 @@ void JSonStorage::writeRecord(int id, double amount, QString date, QString type,
 //--------------------------------------------------------------------------------------------------
 IncomeOrder& JSonStorage::readRecordByID(unsigned id) const
 {
-//    if (m_jsonDoc->isNull())
-//        return 0;
 
-//    QJsonArray entries = m_jsonDoc->object()[JSON_KEY_RECORDS].toArray();
-//    QJsonObject obj = entries[id];
-
-    //return
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -160,13 +152,16 @@ bool JSonStorage::open()
 
     // Use the text data to form Json Document
     QJsonParseError error;
-    m_jsonDoc = new QJsonDocument(QJsonDocument::fromJson(dataFromFile, &error));
-
-    if (false == verifyCreatedJson(error))
-        initHeader();
+    QJsonDocument doc(QJsonDocument::fromJson(dataFromFile, &error));
+    if (false == verifyCreatedJson(doc, error))
+    {
+        QJsonObject headerObj;
+        initHeader(headerObj);
+        doc.setObject(headerObj);
+    }
 
     // Only if data is valid proceed to extracting income records
-    extractAllRecords();
+    extractAllRecords(doc);
 
     m_state = StorageState::Opened;
 
@@ -180,12 +175,11 @@ bool JSonStorage::open()
 //--------------------------------------------------------------------------------------------------
 bool JSonStorage::close()
 {
-
-    QJsonObject rootObject = m_jsonDoc->object();
-    rootObject[JSON_KEY_HEADER_MAGIC] = QString(QCryptographicHash::hash(m_jsonDoc->toJson(), QCryptographicHash::Sha3_384));
+    QJsonDocument doc;
+    serializeRecordsToJson(doc);
 
     m_storageFile->open(QFile::ReadWrite | QFile::Truncate | QFile::Text);
-    m_storageFile->write(m_jsonDoc->toJson());
+    m_storageFile->write(doc.toJson());
     m_storageFile->close();
 
     m_state = StorageState::Closed;
@@ -202,13 +196,40 @@ bool JSonStorage::close()
 // Input:
 // Output:
 //--------------------------------------------------------------------------------------------------
-bool JSonStorage::extractAllRecords()
+void JSonStorage::serializeRecordsToJson(QJsonDocument &doc)
 {
-    if (m_jsonDoc->isNull())
-        return false;
+    QJsonObject rootObject;
 
+    initHeader(rootObject);
+
+    QJsonArray recordsArray;
+    foreach (const IncomeOrder &rec, *m_incomeRecords)
+    {
+        QJsonObject jsonRecord;
+        jsonRecord[INCOME_ORDER_ID_KEY]     = rec.id();
+        jsonRecord[INCOME_ORDER_AMOUNT_KEY] = rec.amount();
+        jsonRecord[INCOME_ORDER_DATE_KEY]   = rec.dateString();
+        jsonRecord[INCOME_ORDER_TYPE_KEY]   = rec.typeString();
+        jsonRecord[INCOME_ORDER_COMMENT_KEY]= rec.comment();
+
+        recordsArray.append(jsonRecord);
+    }
+    rootObject[JSON_KEY_RECORDS] = recordsArray;
+    doc.setObject(rootObject);
+
+    rootObject[JSON_KEY_HEADER_MAGIC] = QString(QCryptographicHash::hash(doc.toJson(), QCryptographicHash::Sha3_384));
+    doc.setObject(rootObject);
+}
+
+//--------------------------------------------------------------------------------------------------
+// Purpose:
+// Input:
+// Output:
+//--------------------------------------------------------------------------------------------------
+void JSonStorage::extractAllRecords(const QJsonDocument &doc)
+{
     m_incomeRecords = new std::vector<IncomeOrder*>();
-    QJsonArray entries = m_jsonDoc->object()[JSON_KEY_RECORDS].toArray();
+    QJsonArray entries = doc.object()[JSON_KEY_RECORDS].toArray();
 
     foreach (const QJsonValue &jsonValue, entries)
     {
@@ -223,8 +244,6 @@ bool JSonStorage::extractAllRecords()
 
         m_incomeRecords->push_back(current_order);
     }
-
-    return true;
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -232,15 +251,12 @@ bool JSonStorage::extractAllRecords()
 // Input:
 // Output:
 //--------------------------------------------------------------------------------------------------
-void JSonStorage::initHeader()
+void JSonStorage::initHeader(QJsonObject &headerObj)
 {
-    QJsonObject json_header;
-    json_header[JSON_KEY_HEADER_TITLE]   = JSON_VALUE_HEADER_TITLE;
-    json_header[JSON_KEY_HEADER_APP_VER] = JSON_VALUE_HEADER_APP_VER;
-    json_header[JSON_KEY_HEADER_MAGIC]   = "";
-    json_header[JSON_KEY_RECORDS]        = QJsonArray();
-
-    m_jsonDoc->setObject(json_header);
+    headerObj[JSON_KEY_HEADER_TITLE]   = JSON_VALUE_HEADER_TITLE;
+    headerObj[JSON_KEY_HEADER_APP_VER] = JSON_VALUE_HEADER_APP_VER;
+    headerObj[JSON_KEY_HEADER_MAGIC]   = "";
+    headerObj[JSON_KEY_RECORDS]        = QJsonArray();
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -248,26 +264,24 @@ void JSonStorage::initHeader()
 // Input:
 // Output:
 //--------------------------------------------------------------------------------------------------
-bool JSonStorage::checkHeader()
+bool JSonStorage::checkHeader(const QJsonDocument &doc)
 {
     QJsonObject::iterator json_iter;
 
-    Q_ASSERT_X(m_jsonDoc != nullptr, __func__, "JsonDocument has not been initialized!!!");
-
-    json_iter = m_jsonDoc->object().find(JSON_KEY_HEADER_APP_VER);
-    if (json_iter == m_jsonDoc->object().end())
+    json_iter = doc.object().find(JSON_KEY_HEADER_APP_VER);
+    if (json_iter == doc.object().end())
         return false;
 
-    json_iter = m_jsonDoc->object().find(JSON_KEY_HEADER_TITLE);
-    if (json_iter == m_jsonDoc->object().end())
+    json_iter = doc.object().find(JSON_KEY_HEADER_TITLE);
+    if (json_iter == doc.object().end())
         return false;
 
-    json_iter = m_jsonDoc->object().find(JSON_KEY_HEADER_MAGIC);
-    if (json_iter == m_jsonDoc->object().end())
+    json_iter = doc.object().find(JSON_KEY_HEADER_MAGIC);
+    if (json_iter == doc.object().end())
         return false;
 
-    json_iter = m_jsonDoc->object().find(JSON_KEY_RECORDS);
-    if (json_iter == m_jsonDoc->object().end())
+    json_iter =doc.object().find(JSON_KEY_RECORDS);
+    if (json_iter == doc.object().end())
         return false;
 
     return true;
@@ -278,18 +292,18 @@ bool JSonStorage::checkHeader()
 // Input:
 // Output:
 //--------------------------------------------------------------------------------------------------
-bool JSonStorage::verifyCreatedJson(QJsonParseError &error)
+bool JSonStorage::verifyCreatedJson(const QJsonDocument &doc, QJsonParseError &error)
 {
 
-    if (error.errorString() != "no error")
+    if (error.errorString() != "no error occurred")
         qDebug() << __FILE__ << __func__ << ": Parsing Json storage file error:" << error.errorString() << endl;
 
     // Basic validity check
-    if ((m_jsonDoc->isArray()) || (m_jsonDoc->isNull()) || (false == checkHeader()))
+    if ((doc.isArray()) || (doc.isNull()) || (false == checkHeader(doc)))
     {
         // Show error
         qDebug() << "Problem loading data from storage" << endl;
-        qDebug() << m_jsonDoc->toJson() << endl;
+        qDebug() << doc.toJson() << endl;
 
         return false;
     }
