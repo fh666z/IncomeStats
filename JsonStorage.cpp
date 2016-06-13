@@ -213,14 +213,15 @@ void JSonStorage::serializeRecordsToJson(QJsonDocument &doc)
     initHeader(rootObject);
 
     QJsonArray recordsArray;
-    foreach (const IncomeOrder &rec, *m_incomeRecords)
+
+    for(std::vector<IncomeOrder*>::iterator iter = m_incomeRecords->begin(); iter != m_incomeRecords->end(); ++iter)
     {
         QJsonObject jsonRecord;
-        jsonRecord[INCOME_ORDER_ID_KEY]     = rec.id();
-        jsonRecord[INCOME_ORDER_AMOUNT_KEY] = rec.amount();
-        jsonRecord[INCOME_ORDER_DATE_KEY]   = rec.dateString();
-        jsonRecord[INCOME_ORDER_TYPE_KEY]   = rec.typeString();
-        jsonRecord[INCOME_ORDER_COMMENT_KEY]= rec.comment();
+        jsonRecord[INCOME_ORDER_ID_KEY]     = (*iter)->id();
+        jsonRecord[INCOME_ORDER_AMOUNT_KEY] = (*iter)->amount();
+        jsonRecord[INCOME_ORDER_DATE_KEY]   = (*iter)->dateString();
+        jsonRecord[INCOME_ORDER_TYPE_KEY]   = (*iter)->typeString();
+        jsonRecord[INCOME_ORDER_COMMENT_KEY]= (*iter)->comment();
 
         recordsArray.append(jsonRecord);
     }
