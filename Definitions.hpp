@@ -14,5 +14,10 @@
 #define JSON_KEY_HEADER_MAGIC       "magic"
 #define JSON_KEY_RECORDS            "records"
 
+#define INCOME_ORDER_ID_KEY         "id"
+#define INCOME_ORDER_AMOUNT_KEY     "amount"
+#define INCOME_ORDER_DATE_KEY       "date"
+#define INCOME_ORDER_TYPE_KEY       "type"
+#define INCOME_ORDER_COMMENT_KEY    "comment"
 
 #endif // DEFINITIONS_HPP

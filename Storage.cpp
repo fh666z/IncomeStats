@@ -1,10 +1,12 @@
 #include <QDebug>
 #include <exception>
+#include <vector>
 
 #include "Storage.hpp"
 
 Storage* Storage::m_pDataStorage = nullptr;
 StorageState Storage::m_state = StorageState::NotInitialized;
+std::vector<IncomeOrder*> *Storage::m_incomeRecords = nullptr;
 
 Storage *Storage::getStorage()
 {

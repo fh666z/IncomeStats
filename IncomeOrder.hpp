@@ -9,21 +9,24 @@ class IncomeOrder : public QObject
 {
     Q_OBJECT
 
-    Q_PROPERTY(QDate date READ date WRITE setDate NOTIFY dateChanged)
-    Q_PROPERTY(double amount READ amount WRITE setAmount NOTIFY amountChanged)
-    Q_PROPERTY(IncomeType type READ type WRITE setType NOTIFY typeChanged)
-    Q_PROPERTY(QString comment READ comment WRITE setComment NOTIFY commentChanged)
+//    Q_PROPERTY(QDate date READ date WRITE setDate NOTIFY dateChanged)
+//    Q_PROPERTY(double amount READ amount WRITE setAmount NOTIFY amountChanged)
+//    Q_PROPERTY(IncomeType type READ type WRITE setType NOTIFY typeChanged)
+//    Q_PROPERTY(QString comment READ comment WRITE setComment NOTIFY commentChanged)
 
 public:
     enum class IncomeType {Salary, Bonus, Other};
     Q_ENUM(IncomeType)
 
-    explicit IncomeOrder(QObject *parent = 0);
-    IncomeOrder(double amount, QString date, IncomeType type, QString comment);
+    IncomeOrder(QObject *parent = 0);
+    IncomeOrder(int id);
+    IncomeOrder(int id, double amount, QString date, QString type, QString comment);
 
+
+    int id() const;
+    double amount() const;
     QDate date() const;
     QString dateString() const;
-    double amount() const;
     IncomeType type() const;
     QString typeString() const;
     QString comment() const;
@@ -31,16 +34,18 @@ public:
 signals:
     void dateChanged(QDate date);
     void amountChanged(double amount);
-    void typeChanged(IncomeType type);
+    void typeChanged(QString type);
     void commentChanged(QString comment);
 
 public slots:
     void setDate(QDate date);
     void setAmount(double amount);
-    void setType(IncomeType type);
+    void setType(QString type);
     void setComment(QString comment);
+    void setId(unsigned id);
 
 private:
+    int m_id;
     double m_amount;
     QDate m_date;
     IncomeType m_type;
