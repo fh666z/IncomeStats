@@ -74,9 +74,10 @@ void JSonStorage::writeRecord(IncomeOrder *new_order)
 // Input:
 // Output:
 //--------------------------------------------------------------------------------------------------
-void JSonStorage::writeRecord(int id, double amount, QString date, QString type, QString comment)
+void JSonStorage::writeRecord(double amount, QString date, QString type, QString comment)
 {
-    m_incomeRecords->push_back(new IncomeOrder(id, amount, date, type, comment));
+    m_incomeRecords->push_back(new IncomeOrder(m_lastRecord, amount, date, type, comment));
+    m_lastRecord++;
 }
 
 
@@ -240,6 +241,8 @@ void JSonStorage::serializeRecordsToJson(QJsonDocument &doc)
 void JSonStorage::extractAllRecords(const QJsonDocument &doc)
 {
     m_incomeRecords = new std::vector<IncomeOrder*>();
+
+    m_lastRecord = doc.object()[JSON_KEY_NUM_RECORDS].toInt();
     QJsonArray entries = doc.object()[JSON_KEY_RECORDS].toArray();
 
     foreach (const QJsonValue &jsonValue, entries)
@@ -268,6 +271,7 @@ void JSonStorage::initHeader(QJsonObject &headerObj)
     headerObj[JSON_KEY_HEADER_APP_VER] = JSON_VALUE_HEADER_APP_VER;
     headerObj[JSON_KEY_HEADER_MAGIC]   = "";
     headerObj[JSON_KEY_RECORDS]        = QJsonArray();
+    headerObj[JSON_KEY_NUM_RECORDS]    = m_lastRecord;
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -291,7 +295,11 @@ bool JSonStorage::checkHeader(const QJsonDocument &doc)
     if (json_iter == doc.object().end())
         return false;
 
-    json_iter =doc.object().find(JSON_KEY_RECORDS);
+    json_iter = doc.object().find(JSON_KEY_RECORDS);
+    if (json_iter == doc.object().end())
+        return false;
+
+    json_iter = doc.object().find(JSON_KEY_NUM_RECORDS);
     if (json_iter == doc.object().end())
         return false;
 

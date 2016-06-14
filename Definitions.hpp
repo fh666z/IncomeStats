@@ -13,6 +13,7 @@
 
 #define JSON_KEY_HEADER_MAGIC       "magic"
 #define JSON_KEY_RECORDS            "records"
+#define JSON_KEY_NUM_RECORDS        "numRecords"
 
 #define INCOME_ORDER_ID_KEY         "id"
 #define INCOME_ORDER_AMOUNT_KEY     "amount"

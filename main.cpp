@@ -17,10 +17,11 @@ int main(int argc, char *argv[])
     {
         if (Storage::getState() == StorageState::Opened)
         {
-            Storage::getStorage()->writeRecord(11, 1000.0, "10-05-2015", "Salary", "test");
+            Storage::getStorage()->writeRecord(1000.0, QDate::currentDate().toString(), "Salary", "test");
 
             IncomeOrder *rec = Storage::getStorage()->readRecordByID(11);
-            qDebug() << "ID: " << rec->id() << " : " << rec->amount() << " : " << rec->typeString() << endl;
+            if (rec)
+                qDebug() << "ID: " << rec->id() << " : " << rec->amount() << " : " << rec->typeString() << endl;
             Storage::getStorage()->close();
         }
     }

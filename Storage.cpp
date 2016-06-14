@@ -7,6 +7,8 @@
 Storage* Storage::m_pDataStorage = nullptr;
 StorageState Storage::m_state = StorageState::NotInitialized;
 std::vector<IncomeOrder*> *Storage::m_incomeRecords = nullptr;
+int Storage::m_lastRecord = 0;
+
 
 Storage *Storage::getStorage()
 {

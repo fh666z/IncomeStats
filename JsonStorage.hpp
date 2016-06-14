@@ -22,7 +22,7 @@ public:
     bool close();
 
     void writeRecord(IncomeOrder* new_order);
-    void writeRecord(int id, double amount, QString date, QString type, QString comment);
+    void writeRecord(double amount, QString date, QString type, QString comment);
 
     IncomeOrder* readRecordByID(int id) const;
     std::vector<IncomeOrder *> *readAllRecords() const;
