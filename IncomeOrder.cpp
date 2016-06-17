@@ -3,9 +3,18 @@
 #include "IncomeOrder.hpp"
 
 
-IncomeOrder::IncomeOrder(QObject *parent) : QObject(parent)
+IncomeOrder::IncomeOrder() : QObject()
 {
 
+}
+
+IncomeOrder::IncomeOrder(const IncomeOrder &rhs) : QObject()
+{
+    m_id = rhs.id();
+    m_amount = rhs.amount();
+    m_date  = rhs.date();
+    m_type = rhs.type();
+    m_comment = rhs.comment();
 }
 
 IncomeOrder::IncomeOrder(int id) :
@@ -25,6 +34,17 @@ IncomeOrder::IncomeOrder(int id, double amount, QString date, QString type, QStr
 {
     QMetaEnum metaEnum = QMetaEnum::fromType<IncomeOrder::IncomeType>();
     m_type = (IncomeType)metaEnum.keysToValue(type.toStdString().c_str());
+}
+
+IncomeOrder &IncomeOrder::operator=(const IncomeOrder &rhs)
+{
+    m_id = rhs.id();
+    m_amount = rhs.amount();
+    m_date  = rhs.date();
+    m_type = rhs.type();
+    m_comment = rhs.comment();
+
+    return *this;
 }
 
 //=====================================================================================================================
@@ -84,6 +104,12 @@ void IncomeOrder::setAmount(double amount)
     m_amount = amount;
     emit amountChanged(amount);
 }
+
+void IncomeOrder::setType(IncomeOrder::IncomeType type)
+{
+    m_type = type;
+}
+
 void IncomeOrder::setType(QString type)
 {
     QMetaEnum metaEnum = QMetaEnum::fromType<IncomeOrder::IncomeType>();

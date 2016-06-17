@@ -26,6 +26,11 @@ bool Storage::exists()
     return (m_pDataStorage != nullptr);
 }
 
+int Storage::getRecordsCount() const
+{
+    return m_lastRecord;
+}
+
 StorageState Storage::getState()
 {
     return m_state;

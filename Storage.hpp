@@ -26,6 +26,8 @@ public:
     virtual IncomeOrder* readRecordByID(int id) const = 0;
     virtual std::vector<IncomeOrder*> *readAllRecords() const = 0;
 
+    int getRecordsCount() const;
+
 
 protected:
     Storage();

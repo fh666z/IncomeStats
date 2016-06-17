@@ -18,9 +18,12 @@ public:
     enum class IncomeType {Salary, Bonus, Other};
     Q_ENUM(IncomeType)
 
-    IncomeOrder(QObject *parent = 0);
+    IncomeOrder();
+    IncomeOrder(const IncomeOrder &rhs);
     IncomeOrder(int id);
     IncomeOrder(int id, double amount, QString date, QString type, QString comment);
+
+    IncomeOrder& operator= (const IncomeOrder& rhs);
 
 
     int id() const;
@@ -40,6 +43,7 @@ signals:
 public slots:
     void setDate(QDate date);
     void setAmount(double amount);
+    void setType(IncomeType type);
     void setType(QString type);
     void setComment(QString comment);
     void setId(unsigned id);
