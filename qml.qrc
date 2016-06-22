@@ -3,6 +3,7 @@
         <file>main.qml</file>
         <file>StyledDataText.qml</file>
         <file>DataTableView.qml</file>
+        <file>images/header.png</file>
+        <file>images/selectedrow.png</file>
     </qresource>
-    <qresource prefix="/qml"/>
 </RCC>

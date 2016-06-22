@@ -4,60 +4,78 @@ import QtQuick.Controls 1.4
 
 
 Item {
-    width: parent.width
+
+    property int tableColumnWidth   : 120
+    property int tableMinHeight     : 400
+    property int tableNumColumns    : 4
+    property int tableMarginSizePx  : 10
+
+    width : parent.width
     height: parent.height
 
-    property int dataRowHeight : 40
+    TableView {
+        id    : dataView
 
-    ListView {
-        anchors.fill: parent
+        width : tableColumnWidth * tableNumColumns
+        height: tableMinHeight
 
-        highlight: highlight
-        highlightFollowsCurrentItem: false
-
-        spacing: 10
-
-        clip: true
         model: incomeOrderModel
-        delegate: Row{
-            width: parent.width
-            height: dataRowHeight
 
-            anchors.left: parent.left
-            padding: 10
+        anchors.top     : parent.top
+        anchors.bottom  : parent.bottom
+        anchors.left    : parent.left
+        anchors.margins : tableMarginSizePx
 
-            StyledDataText {text: id}
-            StyledDataText {text: amount }
-            StyledDataText {text: date}
-            StyledDataText {text: type}
-            StyledDataText {text: comment}
+        alternatingRowColors: true
+        backgroundVisible   : true
+        headerVisible       : true
+        frameVisible        : false
+        sortIndicatorVisible: true
+
+        selectionMode: SelectionMode.SingleSelection
+
+        TableViewColumn
+        {
+            horizontalAlignment: Text.AlignHCenter
+            elideMode: Text.ElideMiddle
+            role    : "date"
+            title   : "Date"
+            width   : tableColumnWidth
+        }
+        TableViewColumn
+        {
+            horizontalAlignment: Text.AlignHCenter
+            elideMode: Text.ElideMiddle
+            role    : "amount"
+            title   : "Amount"
+            width   : tableColumnWidth
+        }
+        TableViewColumn
+        {
+            horizontalAlignment: Text.AlignHCenter
+            elideMode: Text.ElideMiddle
+            role    : "type"
+            title   : "Type"
+            width   : tableColumnWidth
+        }
+        TableViewColumn
+        {
+            horizontalAlignment: Text.AlignHCenter
+            elideMode: Text.ElideMiddle
+            role    : "comment"
+            title   : "Comment"
+            width   : tableColumnWidth
         }
 
-        MouseArea {
-            anchors.fill: parent
-            onClicked: {
-                Qt.quit();
-            }
-        }
-    }
-
-    Component {
-        id: highlight
-        Rectangle {
-            width: parent.width; height: dataRowHeight
-            radius: 3
-            border {
-                color : "lightsteelblue"
-                width: 2
-            }
-
-            y: list.currentItem.y
-            Behavior on y {
-                SpringAnimation {
-                    spring: 3
-                    damping: 0.2
-                }
-            }
-        }
+        headerDelegate: BorderImage
+                        {
+                            source: "images/header.png"
+                            border{left:2;right:2;top:2;bottom:2}
+                            Text {
+                                text : styleData.value
+                                anchors.centerIn : parent
+                                color:"#333"
+                            }
+                        }
     }
 }
