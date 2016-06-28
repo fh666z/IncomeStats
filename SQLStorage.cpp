@@ -1,4 +1,5 @@
 #include <QSqlDatabase>
+#include <QSqlDriver>
 #include <QSqlError>
 #include <QDebug>
 
@@ -56,18 +57,19 @@ void SQLStorage::create()
 //--------------------------------------------------------------------------------------------------
 bool SQLStorage::prepareStorage()
 {
-    // TODO: CHANGE Here
-    m_dbConnDefault = new QSqlDatabase();
-    m_dbConnDefault->addDatabase(QSQL_DB_TYPE);
+    m_dbConnDefault = new QSqlDatabase(QSqlDatabase::addDatabase(QSQL_DB_TYPE));
+
     m_dbConnDefault->setHostName(QSQL_HOSTNAME);
+    m_dbConnDefault->setPort(QSQL_HOST_PORT);
     m_dbConnDefault->setDatabaseName(QSQL_DB_NAME);
     m_dbConnDefault->setUserName(QSQL_USER);
     m_dbConnDefault->setPassword(QSQL_USER_PASS);
 
-    m_state = StorageState::Prepared;
-    this->open();
+    qDebug() << "Database is valid: " << m_dbConnDefault->isValid() << endl;
 
-    return true;
+    m_state = StorageState::Prepared;
+
+    return open();
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -79,10 +81,13 @@ bool SQLStorage::open()
 {
     bool success = m_dbConnDefault->open();
 
-    qDebug() << m_dbConnDefault->lastError().text() << endl;
-
     if (success)
+    {
+        qDebug() << "Connection to:" << m_dbConnDefault->hostName() << ":" << m_dbConnDefault->port() << endl << "Driver:" << m_dbConnDefault->driver()  << "successfull." << endl;
         m_state = StorageState::Opened;
+    }
+    else
+        qDebug() << "Connection failed:"<< m_dbConnDefault->hostName() << ":" << m_dbConnDefault->port() << endl << "Driver:" << m_dbConnDefault->driver() << "Error:"<< m_dbConnDefault->lastError().text() << endl;
 
     return success;
 }

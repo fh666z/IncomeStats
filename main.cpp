@@ -14,6 +14,7 @@
 #include "Definitions.hpp"
 
 #include <QDebug>
+#include <QSqlDatabase>
 
 int main(int argc, char *argv[])
 {
@@ -27,6 +28,7 @@ int main(int argc, char *argv[])
 #ifdef USE_SQL_STORAGE
     SQLStorage::create();
 #endif
+    qDebug() << QSqlDatabase::drivers() << endl;
     bool exists = Storage::getStorage()->exists();
     if (exists)
     {
