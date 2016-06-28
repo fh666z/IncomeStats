@@ -1,13 +1,14 @@
 TEMPLATE = app
 
-QT += qml quick
+QT += qml quick sql
 CONFIG += c++1y
 
 SOURCES += main.cpp \
     IncomeOrder.cpp \
     Storage.cpp \
     JsonStorage.cpp \
-    IncomeOrderModel.cpp
+    IncomeOrderModel.cpp \
+    SQLStorage.cpp
 
 RESOURCES += qml.qrc
 
@@ -20,4 +21,5 @@ HEADERS += \
     JsonStorage.hpp \
     Storage.hpp \
     Definitions.hpp \
-    IncomeOrderModel.hpp
+    IncomeOrderModel.hpp \
+    SQLStorage.hpp

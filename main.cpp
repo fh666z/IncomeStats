@@ -8,8 +8,10 @@
 
 #include "Storage.hpp"
 #include "JsonStorage.hpp"
+#include "SQLStorage.hpp"
 #include "IncomeOrder.hpp"
 #include "IncomeOrderModel.hpp"
+#include "Definitions.hpp"
 
 #include <QDebug>
 
@@ -19,7 +21,12 @@ int main(int argc, char *argv[])
 
     IncomeOrderModel model;
 
+#ifdef USE_JSON_STORAGE
     JSonStorage::create();
+#endif
+#ifdef USE_SQL_STORAGE
+    SQLStorage::create();
+#endif
     bool exists = Storage::getStorage()->exists();
     if (exists)
     {

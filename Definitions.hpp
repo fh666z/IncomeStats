@@ -1,7 +1,15 @@
 #ifndef DEFINITIONS_HPP
 #define DEFINITIONS_HPP
 
+#define USE_SQL_STORAGE
+
+#ifndef USE_SQL_STORAGE
+#define USE_JSON_STORAGE
+#endif
+
+//=============================================================================
 // JSON storage parameters
+//=============================================================================
 #define JSON_STORAGE_FILENAME       "storage.json"
 #define JSON_OPEN_FILE_FLAGS        (QFile::ReadWrite | QFile::Text)
 
@@ -20,5 +28,15 @@
 #define INCOME_ORDER_DATE_KEY       "date"
 #define INCOME_ORDER_TYPE_KEY       "type"
 #define INCOME_ORDER_COMMENT_KEY    "comment"
+
+//=============================================================================
+// SQL storage parameters
+//=============================================================================
+#define QSQL_DB_TYPE                "QMYSQL"
+#define QSQL_HOSTNAME               "reb.wip.bg"
+#define QSQL_DB_NAME                "incomestats"
+#define QSQL_USER                   "root"
+#define QSQL_USER_PASS              "IgorPederast1234"
+
 
 #endif // DEFINITIONS_HPP
