@@ -1,6 +1,7 @@
 #include <QSqlDatabase>
 #include <QSqlDriver>
 #include <QSqlError>
+#include <QSqlQuery>
 #include <QDebug>
 
 #include "SQLStorage.hpp"
@@ -85,6 +86,26 @@ bool SQLStorage::open()
     {
         qDebug() << "Connection to:" << m_dbConnDefault->hostName() << ":" << m_dbConnDefault->port() << endl << "Driver:" << m_dbConnDefault->driver()  << "successfull." << endl;
         m_state = StorageState::Opened;
+
+        QSqlQuery create_table;
+        success = create_table.prepare("create table if not exists "
+                             "records(id integer unique not null auto_increment, "
+                             "date DATE, "
+                             "amount DOUBLE, "
+                             "type ENUM('Salary','Bonus','Other'), "
+                             "comment VARCHAR(100),"
+                             "PRIMARY KEY(id))");
+        // Prepare succeeded
+        if (success)
+            success = create_table.exec();
+        else
+            qDebug() << "Prepare SQL query failed:" << m_dbConnDefault->lastError().text() << endl;
+
+        // Exec succeeded
+        if (!success)
+            qDebug() << "Create table 'records' failed:" << m_dbConnDefault->lastError().text() << endl;
+
+
     }
     else
         qDebug() << "Connection failed:"<< m_dbConnDefault->hostName() << ":" << m_dbConnDefault->port() << endl << "Driver:" << m_dbConnDefault->driver() << "Error:"<< m_dbConnDefault->lastError().text() << endl;

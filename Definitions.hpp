@@ -35,7 +35,7 @@
 //#define USE_TEST_DB
 
 #define QSQL_DB_TYPE                "QMYSQL"
-#define QSQL_DB_NAME                "incomestats"
+#define QSQL_DB_NAME                "contracts"
 #define QSQL_HOST_PORT              3306
 
 #ifdef USE_TEST_DB
@@ -44,8 +44,8 @@
 #define QSQL_USER_PASS              "shano123"
 #else
 #define QSQL_HOSTNAME               "reb.wip.bg"
-#define QSQL_USER                   "root"
-#define QSQL_USER_PASS              "Javor123"
+#define QSQL_USER                   "user_app"
+#define QSQL_USER_PASS              "Letmeinpls!1"
 #endif
 
 
