@@ -8,7 +8,9 @@ SOURCES += main.cpp \
     Storage.cpp \
     JsonStorage.cpp \
     IncomeOrderModel.cpp \
-    SQLStorage.cpp
+    SQLStorage.cpp \
+    IncomeOrderSQLModel.cpp \
+    IncomeType.cpp
 
 RESOURCES += qml.qrc
 
@@ -22,4 +24,6 @@ HEADERS += \
     Storage.hpp \
     Definitions.hpp \
     IncomeOrderModel.hpp \
-    SQLStorage.hpp
+    SQLStorage.hpp \
+    IncomeOrderSQLModel.hpp \
+    IncomeType.hpp

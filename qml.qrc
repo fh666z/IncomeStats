@@ -5,5 +5,6 @@
         <file>DataTableView.qml</file>
         <file>images/header.png</file>
         <file>images/selectedrow.png</file>
+        <file>NewOrder.qml</file>
     </qresource>
 </RCC>

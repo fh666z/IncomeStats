@@ -1,5 +1,4 @@
 #include <QMetaEnum>
-
 #include "IncomeOrder.hpp"
 
 
@@ -21,7 +20,7 @@ IncomeOrder::IncomeOrder(int id) :
     m_id(id),
     m_amount(0),
     m_date(QDate::fromString("6-3-1988", "d-M-yyyy")),
-    m_type(IncomeType::Other), m_comment("")
+    m_type(IncomeType::asEnum::Other), m_comment("")
 {
 
 }
@@ -32,8 +31,8 @@ IncomeOrder::IncomeOrder(int id, double amount, QString date, QString type, QStr
     m_date(QDate::fromString(date, "d-M-yyyy")),
     m_comment(comment)
 {
-    QMetaEnum metaEnum = QMetaEnum::fromType<IncomeOrder::IncomeType>();
-    m_type = (IncomeType)metaEnum.keysToValue(type.toStdString().c_str());
+    QMetaEnum metaEnum = QMetaEnum::fromType<IncomeType::asEnum>();
+    m_type = (IncomeType::asEnum)metaEnum.keysToValue(type.toStdString().c_str());
 }
 
 IncomeOrder &IncomeOrder::operator=(const IncomeOrder &rhs)
@@ -64,14 +63,14 @@ double IncomeOrder::amount() const
     return m_amount;
 }
 
-IncomeOrder::IncomeType IncomeOrder::type() const
+IncomeType::asEnum IncomeOrder::type() const
 {
     return m_type;
 }
 
 QString IncomeOrder::typeString() const
 {
-    QMetaEnum metaEnum = QMetaEnum::fromType<IncomeOrder::IncomeType>();
+    QMetaEnum metaEnum = QMetaEnum::fromType<IncomeType::asEnum>();
     return metaEnum.valueToKey((int)m_type);
 }
 
@@ -105,15 +104,15 @@ void IncomeOrder::setAmount(double amount)
     emit amountChanged(amount);
 }
 
-void IncomeOrder::setType(IncomeOrder::IncomeType type)
+void IncomeOrder::setType(IncomeType::asEnum type)
 {
     m_type = type;
 }
 
 void IncomeOrder::setType(QString type)
 {
-    QMetaEnum metaEnum = QMetaEnum::fromType<IncomeOrder::IncomeType>();
-    m_type = (IncomeType)metaEnum.keysToValue(type.toStdString().c_str());
+    QMetaEnum metaEnum = QMetaEnum::fromType<IncomeType::asEnum>();
+    m_type = (IncomeType::asEnum)metaEnum.keysToValue(type.toStdString().c_str());
 
     emit typeChanged(type);
 }

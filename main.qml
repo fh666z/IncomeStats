@@ -6,8 +6,8 @@ import QtQuick.Controls 1.4
 ApplicationWindow {
 
     property int windowOffset   : 50
-    property int windowMinWidth : dataTable.tableColumnWidth * dataTable.tableNumColumns + 2 * dataTable.tableMarginSizePx
-    property int windowMinHeight: dataTable.tableMinHeight + windowOffset
+    property int windowMinWidth : dataTableId.tableColumnWidth * dataTableId.tableNumColumns + 2 * dataTableId.tableMarginSizePx
+    property int windowMinHeight: dataTableId.tableMinHeight + windowOffset
 
     id      : mainWinId
     title   : "Income Stats"
@@ -21,32 +21,72 @@ ApplicationWindow {
     }
 
     menuBar: MenuBar {
-        id : mainMenu
+        id : mainMenuId
 
         Menu {
-            title: "File"
-            MenuItem {text: "File"}
-            MenuItem {text: "New"}
-            MenuItem {text: "Open"}
+            title: "Program"
+
+            MenuItem {
+                text: qsTr("Login")
+                shortcut: "Ctrl+L"
+//                onTriggered: mainWinId.color = "blue"
+            }
+
+            MenuItem {
+                text: qsTr("Exit")
+                shortcut: StandardKey.Quit
+                onTriggered: Qt.quit()
+            }
+        }
+        Menu {
+            title: "Contract"
+            MenuItem {
+                text: qsTr("Add ..")
+                shortcut: "Ctrl+A"
+                onTriggered: newOrderWindow.show()
+            }
+
+            MenuItem {
+                text: qsTr("Edit ..")
+                shortcut: "Ctrl+E"
+            }
+
+            MenuItem {
+                text: qsTr("Remove")
+                shortcut: "Ctrl+D"
+            }
         }
     }
 
-    Column {
-        id : mainViewColumn
-        anchors.fill : parent
-
-        DataTableView {
-            id : dataTable
-        }
+    NewOrder {
+        id : newOrderWindow
     }
+
+    DataTableView {
+        id : dataTableId
+    }
+
+    function enableMainView()
+    {
+        dataTableId.enabled = true
+    }
+
+    function disableMainView()
+    {
+        dataTableId.enabled = false
+    }
+
+
 
     statusBar: StatusBar {
         id: appStatusBar
         Text {
             id: statusTextId
-            text: qsTr("Height: " + mainViewColumn.height)
+            text: qsTr("Test ")
         }
 
     }
 }
+
+
 

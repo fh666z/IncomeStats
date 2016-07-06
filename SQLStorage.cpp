@@ -87,8 +87,8 @@ bool SQLStorage::open()
         qDebug() << "Connection to:" << m_dbConnDefault->hostName() << ":" << m_dbConnDefault->port() << endl << "Driver:" << m_dbConnDefault->driver()  << "successfull." << endl;
         m_state = StorageState::Opened;
 
-        QSqlQuery create_table;
-        success = create_table.prepare("create table if not exists "
+        QSqlQuery createTable(*m_dbConnDefault);
+        success = createTable.prepare("create table if not exists "
                              "records(id integer unique not null auto_increment, "
                              "date DATE, "
                              "amount DOUBLE, "
@@ -97,12 +97,16 @@ bool SQLStorage::open()
                              "PRIMARY KEY(id))");
         // Prepare succeeded
         if (success)
-            success = create_table.exec();
+            success = createTable.exec();
         else
             qDebug() << "Prepare SQL query failed:" << m_dbConnDefault->lastError().text() << endl;
 
         // Exec succeeded
-        if (!success)
+        if (success)
+        {
+            qDebug() << "Database ready!" << endl;
+        }
+        else
             qDebug() << "Create table 'records' failed:" << m_dbConnDefault->lastError().text() << endl;
 
 
@@ -170,4 +174,14 @@ IncomeOrder *SQLStorage::readRecordByID(int id) const
 std::vector<IncomeOrder *> *SQLStorage::readAllRecords() const
 {
     return nullptr;
+}
+
+//--------------------------------------------------------------------------------------------------
+// Purpose:
+// Input:
+// Output:
+//--------------------------------------------------------------------------------------------------
+void* SQLStorage::getConnection()
+{
+    return m_dbConnDefault;
 }

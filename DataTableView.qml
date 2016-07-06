@@ -1,3 +1,4 @@
+import QtQml 2.2
 import QtQuick 2.6
 import QtQuick.Window 2.2
 import QtQuick.Controls 1.4
@@ -23,7 +24,7 @@ Item {
 
         anchors.top     : parent.top
         anchors.bottom  : parent.bottom
-        anchors.left    : parent.left
+//        anchors.left    : parent.left
         anchors.margins : tableMarginSizePx
 
         alternatingRowColors: true
@@ -41,6 +42,13 @@ Item {
             role    : "date"
             title   : "Date"
             width   : tableColumnWidth
+
+            delegate: Component {
+                Text {
+                    text: model.date.toLocaleDateString(Qt.locale(), Locale.ShortFormat)
+                    horizontalAlignment: Text.Center
+                }
+            }
         }
         TableViewColumn
         {

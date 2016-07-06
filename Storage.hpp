@@ -20,8 +20,8 @@ public:
     virtual bool prepareStorage() = 0;
     virtual bool open() = 0;
     virtual bool close() = 0;
+    virtual void *getConnection() = 0;
 
-//    virtual void writeRecord(IncomeOrder* new_order) = 0;
     virtual void writeRecord(double amount, QString date, QString type, QString comment) = 0;
     virtual IncomeOrder* readRecordByID(int id) const = 0;
     virtual std::vector<IncomeOrder*> *readAllRecords() const = 0;

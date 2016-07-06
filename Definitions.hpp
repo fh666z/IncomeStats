@@ -35,7 +35,7 @@
 //#define USE_TEST_DB
 
 #define QSQL_DB_TYPE                "QMYSQL"
-#define QSQL_DB_NAME                "contracts"
+#define QSQL_DB_NAME                "incomestats"
 #define QSQL_HOST_PORT              3306
 
 #ifdef USE_TEST_DB

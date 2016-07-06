@@ -4,7 +4,6 @@
 #include <QObject>
 #include <QDate>
 
-
 class IncomeOrder : public QObject
 {
     Q_OBJECT
@@ -15,9 +14,6 @@ class IncomeOrder : public QObject
 //    Q_PROPERTY(QString comment READ comment WRITE setComment NOTIFY commentChanged)
 
 public:
-    enum class IncomeType {Salary, Bonus, Other};
-    Q_ENUM(IncomeType)
-
     IncomeOrder();
     IncomeOrder(const IncomeOrder &rhs);
     IncomeOrder(int id);
@@ -30,7 +26,7 @@ public:
     double amount() const;
     QDate date() const;
     QString dateString() const;
-    IncomeType type() const;
+    IncomeType::asEnum type() const;
     QString typeString() const;
     QString comment() const;
 
@@ -43,7 +39,7 @@ signals:
 public slots:
     void setDate(QDate date);
     void setAmount(double amount);
-    void setType(IncomeType type);
+    void setType(IncomeType::asEnum type);
     void setType(QString type);
     void setComment(QString comment);
     void setId(unsigned id);
@@ -52,7 +48,7 @@ private:
     int m_id;
     double m_amount;
     QDate m_date;
-    IncomeType m_type;
+    IncomeType::asEnum m_type;
     QString m_comment;
 
 };

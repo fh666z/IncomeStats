@@ -23,6 +23,8 @@ public:
     SQLStorage();
     virtual ~SQLStorage();
 
+    void* getConnection();
+
 private:
     QSqlDatabase *m_dbConnDefault;
 

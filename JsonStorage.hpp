@@ -20,6 +20,7 @@ public:
     bool prepareStorage();
     bool open();
     bool close();
+    void *getConnection();
 
     void writeRecord(IncomeOrder* new_order);
     void writeRecord(double amount, QString date, QString type, QString comment);
