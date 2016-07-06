@@ -11,9 +11,6 @@ Item {
     property int tableNumColumns    : 4
     property int tableMarginSizePx  : 10
 
-    width : parent.width
-    height: parent.height
-
     TableView {
         id    : dataView
 
@@ -21,11 +18,6 @@ Item {
         height: tableMinHeight
 
         model: incomeOrderModel
-
-        anchors.top     : parent.top
-        anchors.bottom  : parent.bottom
-//        anchors.left    : parent.left
-        anchors.margins : tableMarginSizePx
 
         alternatingRowColors: true
         backgroundVisible   : true

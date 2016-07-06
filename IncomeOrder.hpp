@@ -4,14 +4,16 @@
 #include <QObject>
 #include <QDate>
 
+#include <IncomeType.hpp>
+
 class IncomeOrder : public QObject
 {
     Q_OBJECT
 
-//    Q_PROPERTY(QDate date READ date WRITE setDate NOTIFY dateChanged)
-//    Q_PROPERTY(double amount READ amount WRITE setAmount NOTIFY amountChanged)
-//    Q_PROPERTY(IncomeType type READ type WRITE setType NOTIFY typeChanged)
-//    Q_PROPERTY(QString comment READ comment WRITE setComment NOTIFY commentChanged)
+    Q_PROPERTY(QDate date READ date WRITE setDate NOTIFY dateChanged)
+    Q_PROPERTY(double amount READ amount WRITE setAmount NOTIFY amountChanged)
+    Q_PROPERTY(IncomeType::asEnum type READ type WRITE setType NOTIFY typeChanged)
+    Q_PROPERTY(QString comment READ comment WRITE setComment NOTIFY commentChanged)
 
 public:
     IncomeOrder();

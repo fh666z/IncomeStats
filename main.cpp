@@ -27,11 +27,11 @@ int main(int argc, char *argv[])
 
 
 #ifdef USE_JSON_STORAGE
-    IncomeOrderModel *model = nullptr;
+    IncomeOrderModel *dataModel = nullptr;
     JSonStorage::create();
 #endif
 #ifdef USE_SQL_STORAGE
-    IncomeOrderSQLModel *model = nullptr;
+    IncomeOrderSQLModel *dataModel = nullptr;
     SQLStorage::create();
 #endif
     qDebug() << QSqlDatabase::drivers() << endl;
@@ -46,17 +46,22 @@ int main(int argc, char *argv[])
             model->addIncomeOrder(*Storage::getStorage()->readRecordByID(index));
 #endif
 #ifdef USE_SQL_STORAGE
-    model = new IncomeOrderSQLModel(&app, (QSqlDatabase *)(Storage::getStorage()->getConnection()));
-    model->setTable("records");
-    model->select();
+    dataModel = new IncomeOrderSQLModel(&app, (QSqlDatabase *)(Storage::getStorage()->getConnection()));
+    dataModel->setTable("records");
+    dataModel->select();
 #endif
     }
+
+    IncomeTypeModel *typeModel = new IncomeTypeModel();
+    IncomeOrder new_order;
 
 
     QQmlApplicationEngine engine;
     QQmlContext *ctx = engine.rootContext();
 
-    ctx->setContextProperty("incomeOrderModel", model);
+    ctx->setContextProperty("new_order", &new_order);
+    ctx->setContextProperty("incomeOrderModel", dataModel);
+    ctx->setContextProperty("incomeTypeModel", typeModel);
 
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
 

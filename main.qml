@@ -58,12 +58,16 @@ ApplicationWindow {
         }
     }
 
-    NewOrder {
-        id : newOrderWindow
-    }
+    Column {
+        id: contentColumn
+        anchors.fill: parent
+        anchors.topMargin:  dataTableId.tableMarginSizePx
+        anchors.leftMargin: dataTableId.tableMarginSizePx
+        padding: 10
 
-    DataTableView {
-        id : dataTableId
+        DataTableView {
+            id : dataTableId
+        }
     }
 
     function enableMainView()
@@ -77,6 +81,9 @@ ApplicationWindow {
     }
 
 
+    NewOrderView {
+        id : newOrderWindow
+    }
 
     statusBar: StatusBar {
         id: appStatusBar

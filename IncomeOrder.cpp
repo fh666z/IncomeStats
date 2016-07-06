@@ -1,6 +1,7 @@
 #include <QMetaEnum>
 #include "IncomeOrder.hpp"
 
+class IncomeType;
 
 IncomeOrder::IncomeOrder() : QObject()
 {
