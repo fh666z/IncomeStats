@@ -124,13 +124,9 @@ bool SQLStorage::open()
 //--------------------------------------------------------------------------------------------------
 bool SQLStorage::close()
 {
-//    QJsonDocument doc;
-//    serializeRecordsToJson(doc);
+    m_dbConnDefault->close();
 
-//    m_storageFile->open(QFile::ReadWrite | QFile::Truncate | QFile::Text);
-//    m_storageFile->write(doc.toJson());
-//    m_storageFile->close();
-
+    delete m_dbConnDefault;
     m_state = StorageState::Closed;
 
     return true;

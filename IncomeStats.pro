@@ -1,7 +1,12 @@
 TEMPLATE = app
 
-QT += qml quick sql
+QT += qml quick sql widgets
 CONFIG += c++1y
+
+INCLUDEPATH += "C:\Program Files (x86)\MySQL\MySQL Server 5.7\include"
+INCLUDEPATH += "C:\Program Files (x86)\MySQL\MySQL Server 5.7\lib"
+
+LIBS += -L"C:\Program Files (x86)\MySQL\MySQL Server 5.7\lib" -llibmysql
 
 SOURCES += main.cpp \
     IncomeOrder.cpp \
@@ -10,7 +15,8 @@ SOURCES += main.cpp \
     IncomeOrderModel.cpp \
     SQLStorage.cpp \
     IncomeOrderSQLModel.cpp \
-    IncomeType.cpp
+    IncomeType.cpp \
+    ViewModelTransactionHandler.cpp
 
 RESOURCES += qml.qrc
 
@@ -26,4 +32,5 @@ HEADERS += \
     IncomeOrderModel.hpp \
     SQLStorage.hpp \
     IncomeOrderSQLModel.hpp \
-    IncomeType.hpp
+    IncomeType.hpp \
+    ViewModelTransactionHandler.hpp

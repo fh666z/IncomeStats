@@ -49,6 +49,7 @@ ApplicationWindow {
             MenuItem {
                 text: qsTr("Edit ..")
                 shortcut: "Ctrl+E"
+                onTriggered: editOrderWindow.show()
             }
 
             MenuItem {
@@ -81,8 +82,16 @@ ApplicationWindow {
     }
 
 
-    NewOrderView {
+    OrderView {
         id : newOrderWindow
+        title: "Add new ..."
+        btnAddEditText : "Add"
+    }
+
+    OrderView {
+        id : editOrderWindow
+        title: "Edit Order ..."
+        btnAddEditText : "Edit"
     }
 
     statusBar: StatusBar {
@@ -91,7 +100,6 @@ ApplicationWindow {
             id: statusTextId
             text: qsTr("Test ")
         }
-
     }
 }
 
