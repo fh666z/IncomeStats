@@ -5,6 +5,7 @@
         <file>DataTableView.qml</file>
         <file>images/header.png</file>
         <file>images/selectedrow.png</file>
-        <file>NewOrderView.qml</file>
+        <file>OrderView.qml</file>
+        <file>DatePicker.qml</file>
     </qresource>
 </RCC>
