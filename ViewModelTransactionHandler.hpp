@@ -3,20 +3,27 @@
 
 #include "IncomeType.hpp"
 
+class QObject;
 class QQmlApplicationEngine;
 class IncomeOrderSQLModel;
 
-class ViewModelTransactionHandler
+
+class ViewModelTransactionHandler //: public QObject
 {
+    //Q_OBJECT
+
 public:
     static ViewModelTransactionHandler *getHandler();
 
     bool createModels(QObject *parent);
     void registerTypes();
-    bool connectModelsToView(QQmlApplicationEngine &qmlEngine);
+    void connectModelsToView(QQmlApplicationEngine &qmlEngine);
 
-protected:
-    ViewModelTransactionHandler();
+public slots:
+    void newItemAddedSlot(const QString &msg);
+
+private:
+    ViewModelTransactionHandler(QObject *parent = nullptr);
     ~ViewModelTransactionHandler();
 
 private:

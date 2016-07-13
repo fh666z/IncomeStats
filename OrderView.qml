@@ -8,7 +8,7 @@ import QtQuick.Controls.Styles 1.4
 import CPPEnums 1.0
 
 Window {
-    id: winId
+    id: orderWindowId
 
     flags: Qt.Dialog | Qt.Window
     modality: Qt.WindowModal
@@ -16,7 +16,7 @@ Window {
     width: mainGroup.implicitWidth
     height: mainGroup.implicitHeight
 
-    property string btnAddEditText
+    property string btnAcceptText
 
     Item {
         anchors.fill: parent
@@ -131,8 +131,10 @@ Window {
                 anchors.horizontalCenter: parent.horizontalCenter
 
                 Button {
-                    id: btnAddEdit
-                    text: qsTr(btnAddEditText)
+                    id: btnAccept
+                    objectName: btnAcceptText
+
+                    text: qsTr(btnAcceptText)
                     onClicked: {
                         if (amountField.text === "")
                         {
@@ -140,6 +142,10 @@ Window {
                             amountField.style = warningFieldStyle
                             amountField.text = "Please fill an amount"
                             amountField.focus = false
+                        }
+                        else
+                        {
+                            mainWinId.orderViewAcceptButtonPressed(btnAcceptText)
                         }
                     }
                 }

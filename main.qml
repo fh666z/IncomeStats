@@ -15,6 +15,8 @@ ApplicationWindow {
     height  : windowMinHeight
     visible : true
 
+    signal orderViewAcceptButtonPressed(string msg)
+
     contentItem {
         minimumHeight: windowMinHeight
         minimumWidth : windowMinWidth
