@@ -15,6 +15,16 @@
 
 #include "IncomeType.hpp"
 
+ViewModelTransactionHandler *ViewModelTransactionHandler::m_dataHandler = nullptr;
+
+ViewModelTransactionHandler *ViewModelTransactionHandler::getHandler()
+{
+    if (m_dataHandler == nullptr)
+        m_dataHandler = new ViewModelTransactionHandler();
+
+    return m_dataHandler;
+}
+
 bool ViewModelTransactionHandler::createModels(QObject *parent)
 {
     bool exists = Storage::getStorage()->exists();
@@ -44,17 +54,17 @@ void ViewModelTransactionHandler::registerTypes()
     qmlRegisterUncreatableType<IncomeType>("CPPEnums", 1, 0, "IncomeType", "Export enums from C++");
 }
 
-void ViewModelTransactionHandler::connectModelsToView()
+void ViewModelTransactionHandler::connectModelsToView(QQmlApplicationEngine &qmlEngine)
 {
-    QQmlContext *qmlContext = m_qmlEngine->rootContext();
+    QQmlContext *qmlContext = qmlEngine.rootContext();
 
     qmlContext->setContextProperty("incomeTypeModel", m_typeModel);
     qmlContext->setContextProperty("incomeOrderModel", m_dataModel);
 }
 
-bool ViewModelTransactionHandler::connectSignals()
+bool ViewModelTransactionHandler::connectSignals(QQmlApplicationEngine &qmlEngine)
 {
-    auto rootObjects = m_qmlEngine->rootObjects();
+    auto rootObjects = qmlEngine.rootObjects();
     if (rootObjects.count() < 1)
         return false;
     QObject *rootObj = rootObjects[0];
@@ -70,9 +80,8 @@ void ViewModelTransactionHandler::onNewItemAddedSlot(const QString &msg)
     qDebug() << "Data received from QML: " << msg << endl;
 }
 
-ViewModelTransactionHandler::ViewModelTransactionHandler(QObject *parent, QQmlApplicationEngine *qmlEngine) :
-    QObject(parent),
-    m_qmlEngine(qmlEngine)
+ViewModelTransactionHandler::ViewModelTransactionHandler(QObject *parent) :
+    QObject(parent)
 {
     Q_UNUSED(parent)
     SQLStorage::create();

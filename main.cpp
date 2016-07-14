@@ -9,14 +9,14 @@ int main(int argc, char *argv[])
 
     QQmlApplicationEngine engine;
 
-    ViewModelTransactionHandler viewManager(&app, &engine);
-    viewManager.createModels(&app);
-    viewManager.registerTypes();
-    viewManager.connectModelsToView();
+
+    ViewModelTransactionHandler::getHandler()->createModels(&app);
+    ViewModelTransactionHandler::getHandler()->registerTypes();
+    ViewModelTransactionHandler::getHandler()->connectModelsToView(engine);
 
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
 
-    viewManager.connectSignals();
+    ViewModelTransactionHandler::getHandler()->connectSignals(engine);
 
     return app.exec();
 }

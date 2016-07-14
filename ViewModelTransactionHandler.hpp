@@ -13,19 +13,23 @@ class ViewModelTransactionHandler : public QObject
     Q_OBJECT
 
 public:
-    ViewModelTransactionHandler(QObject *parent, QQmlApplicationEngine *m_qmlEngine);
+    static ViewModelTransactionHandler *getHandler();
     ~ViewModelTransactionHandler();
 
     bool createModels(QObject *parent);
     void registerTypes();
-    void connectModelsToView();
-    bool connectSignals();
+    void connectModelsToView(QQmlApplicationEngine &qmlEngine);
+    bool connectSignals(QQmlApplicationEngine &qmlEngine);
 
 public slots:
     void onNewItemAddedSlot(const QString &msg);
 
+protected:
+    ViewModelTransactionHandler(QObject *parent = nullptr);
+
 private:
-    QQmlApplicationEngine   *m_qmlEngine;
+    static ViewModelTransactionHandler *m_dataHandler;
+
     IncomeOrderSQLModel     *m_dataModel;
     IncomeTypeModel         *m_typeModel;
 
