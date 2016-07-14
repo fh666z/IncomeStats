@@ -2,6 +2,7 @@
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QtQml>
+#include <QDebug>
 
 #include <QSqlRelationalDelegate>
 #include <QDataWidgetMapper>
@@ -13,16 +14,6 @@
 #include "IncomeOrderSQLModel.hpp"
 
 #include "IncomeType.hpp"
-
-ViewModelTransactionHandler *ViewModelTransactionHandler::m_dataHandler = nullptr;
-
-ViewModelTransactionHandler *ViewModelTransactionHandler::getHandler()
-{
-    if (m_dataHandler == nullptr)
-        m_dataHandler = new ViewModelTransactionHandler();
-
-    return m_dataHandler;
-}
 
 bool ViewModelTransactionHandler::createModels(QObject *parent)
 {
@@ -36,13 +27,13 @@ bool ViewModelTransactionHandler::createModels(QObject *parent)
 
         m_typeModel = new IncomeTypeModel();
 
-        QDataWidgetMapper *mapper = new QDataWidgetMapper();
-        mapper->setModel(m_dataModel);
-        mapper->setItemDelegate(new QSqlRelationalDelegate());
+//        QDataWidgetMapper *mapper = new QDataWidgetMapper();
+//        mapper->setModel(m_dataModel);
+//        mapper->setItemDelegate(new QSqlRelationalDelegate());
     //    mapper->addMapping(nameEdit, model->fieldIndex("name"));
     //    mapper->addMapping(addressEdit, model->fieldIndex("address"));
     //    mapper->addMapping(typeComboBox, typeIndex);
-        mapper->toFirst();
+//        mapper->toFirst();
     }
 
     return exists;
@@ -53,24 +44,35 @@ void ViewModelTransactionHandler::registerTypes()
     qmlRegisterUncreatableType<IncomeType>("CPPEnums", 1, 0, "IncomeType", "Export enums from C++");
 }
 
-void ViewModelTransactionHandler::connectModelsToView(QQmlApplicationEngine &qmlEngine)
+void ViewModelTransactionHandler::connectModelsToView()
 {
-    QQmlContext *qmlContext = qmlEngine.rootContext();
+    QQmlContext *qmlContext = m_qmlEngine->rootContext();
 
     qmlContext->setContextProperty("incomeTypeModel", m_typeModel);
     qmlContext->setContextProperty("incomeOrderModel", m_dataModel);
-
-    const QObject *btnAdd = qmlContext->findChild<QObject*>("Add");
-    QObject::connect(btnAdd, SIGNAL(acceptButtonPressed(Qstring)), this, SLOT(newItemAddedSlot(QString)));
 }
 
-void ViewModelTransactionHandler::newItemAddedSlot(const QString &msg)
+bool ViewModelTransactionHandler::connectSignals()
 {
-#include <QDebug>
+    auto rootObjects = m_qmlEngine->rootObjects();
+    if (rootObjects.count() < 1)
+        return false;
+    QObject *rootObj = rootObjects[0];
+
+    QObject::connect(rootObj, SIGNAL(orderViewAcceptButtonPressed(QString)),
+                     this, SLOT(onNewItemAddedSlot(QString)));
+
+    return true;
+}
+
+void ViewModelTransactionHandler::onNewItemAddedSlot(const QString &msg)
+{
     qDebug() << "Data received from QML: " << msg << endl;
 }
 
-ViewModelTransactionHandler::ViewModelTransactionHandler(QObject *parent)
+ViewModelTransactionHandler::ViewModelTransactionHandler(QObject *parent, QQmlApplicationEngine *qmlEngine) :
+    QObject(parent),
+    m_qmlEngine(qmlEngine)
 {
     Q_UNUSED(parent)
     SQLStorage::create();

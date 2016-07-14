@@ -87,13 +87,13 @@ ApplicationWindow {
     OrderView {
         id : newOrderWindow
         title: "Add new ..."
-        btnAddEditText : "Add"
+        btnAcceptText : "Add"
     }
 
     OrderView {
         id : editOrderWindow
         title: "Edit Order ..."
-        btnAddEditText : "Edit"
+        btnAcceptText : "Edit"
     }
 
     statusBar: StatusBar {

@@ -6,7 +6,7 @@
 
 class IncomeOrderSQLModel : public QSqlRelationalTableModel
 {
-    //Q_OBJECT
+    Q_OBJECT
 
 public:
     IncomeOrderSQLModel(QObject *parent = 0,  QSqlDatabase *db = new QSqlDatabase());

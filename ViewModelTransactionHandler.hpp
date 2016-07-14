@@ -8,29 +8,26 @@ class QQmlApplicationEngine;
 class IncomeOrderSQLModel;
 
 
-class ViewModelTransactionHandler //: public QObject
+class ViewModelTransactionHandler : public QObject
 {
-    //Q_OBJECT
+    Q_OBJECT
 
 public:
-    static ViewModelTransactionHandler *getHandler();
+    ViewModelTransactionHandler(QObject *parent, QQmlApplicationEngine *m_qmlEngine);
+    ~ViewModelTransactionHandler();
 
     bool createModels(QObject *parent);
     void registerTypes();
-    void connectModelsToView(QQmlApplicationEngine &qmlEngine);
+    void connectModelsToView();
+    bool connectSignals();
 
 public slots:
-    void newItemAddedSlot(const QString &msg);
+    void onNewItemAddedSlot(const QString &msg);
 
 private:
-    ViewModelTransactionHandler(QObject *parent = nullptr);
-    ~ViewModelTransactionHandler();
-
-private:
-    static ViewModelTransactionHandler *m_dataHandler;
-
-    IncomeOrderSQLModel *m_dataModel;
-    IncomeTypeModel     *m_typeModel;
+    QQmlApplicationEngine   *m_qmlEngine;
+    IncomeOrderSQLModel     *m_dataModel;
+    IncomeTypeModel         *m_typeModel;
 
 };
 
