@@ -29,6 +29,10 @@ Item {
 
         selectionMode: SelectionMode.SingleSelection
 
+        onDoubleClicked: {
+            console.log("Edit record: " + currentRow)
+        }
+
         TableViewColumn
         {
             horizontalAlignment: Text.AlignHCenter
