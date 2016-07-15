@@ -3,6 +3,7 @@
 #include <QQmlContext>
 #include <QtQml>
 
+#include <QException>
 #include <QString>
 #include <QDate>
 #include <QDebug>
@@ -98,12 +99,20 @@ void ViewModelTransactionHandler::onAcceptOrderButtonPressed(int currentRow, QDa
     {
         m_dataModel->submitAll();
     }
+    else
+        qDebug() << "File: " __FILE__ << "function:" << __func__ << "Adding record failed!" << endl;
 }
 
 void ViewModelTransactionHandler::onDeleteRowRequested(int currentRow)
 {
-    m_dataModel->removeRow(currentRow);
-    m_dataModel->submitAll();
+    if ((currentRow >= 0) && (currentRow < m_dataModel->rowCount()))
+    {
+        qDebug() << "Delete Row: " << currentRow << endl;
+        m_dataModel->removeRow(currentRow);
+        m_dataModel->submitAll();
+    }
+    else
+        qDebug() << "File: " __FILE__ << "function:" << __func__ << "Cannot delete row:" << currentRow << endl;
 }
 
 ViewModelTransactionHandler::ViewModelTransactionHandler(QObject *parent) :
