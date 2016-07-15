@@ -3,7 +3,10 @@
 
 #include "IncomeType.hpp"
 
-class QObject;
+#include <QObject>
+#include <QString>
+#include <QDateTime>
+
 class QQmlApplicationEngine;
 class IncomeOrderSQLModel;
 
@@ -22,7 +25,7 @@ public:
     bool connectSignals(QQmlApplicationEngine &qmlEngine);
 
 public slots:
-    void onNewItemAddedSlot(const QString &msg);
+    void onAcceptOrderButtonPressed(int currentRow, QDateTime date, QString amount, QVariant type, QString comment);
 
 protected:
     ViewModelTransactionHandler(QObject *parent = nullptr);

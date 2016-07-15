@@ -13,6 +13,9 @@ Window {
     flags: Qt.Dialog | Qt.Window
     modality: Qt.WindowModal
 
+    minimumWidth: mainGroup.implicitWidth
+    minimumHeight: mainGroup.implicitHeight
+
     width: mainGroup.implicitWidth
     height: mainGroup.implicitHeight
 
@@ -44,11 +47,13 @@ Window {
                     TextField {
                         id: dateDialog
 
+                        property date selectedDate: datePickerId.calendarDate
+
                         anchors.fill: parent
                         horizontalAlignment: Text.Center
                         style: defaultFieldStyle
 
-                        text: datePickerId.calendarDate
+                        text: datePickerId.calendarDate.toLocaleDateString(Qt.locale())
 
                         MouseArea {
                             anchors.fill: parent
@@ -74,8 +79,10 @@ Window {
                         horizontalAlignment: Text.Center
                         style : defaultFieldStyle
 
+                        //onFocusChanged:
+
                         onActiveFocusChanged: {
-                            if (focus) {
+                            if ((focus === true) && (style === warningFieldStyle)) {
                                 text = ""
                                 style = defaultFieldStyle
                             }
@@ -145,7 +152,10 @@ Window {
                         }
                         else
                         {
-                            mainWinId.orderViewAcceptButtonPressed(btnAcceptText)
+                            mainWinId.orderViewAcceptButtonPressed(dataTableId.currentRow, dateDialog.selectedDate,
+                                                                   amountField.text, typeCombo.currentIndex+1,
+                                                                   commentText.text)
+                            close()
                         }
                     }
                 }
@@ -187,9 +197,7 @@ Window {
 
     DatePicker {
         id: datePickerId
-
     }
-
 }
 
 

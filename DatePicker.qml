@@ -12,7 +12,7 @@ Window {
     width: calendar.implicitWidth
     height: calendar.implicitHeight
 
-    property string calendarDate: calendar.selectedDate.toLocaleDateString(Qt.locale())
+    property date calendarDate: calendar.selectedDate
 
     Item {
         anchors.fill: parent

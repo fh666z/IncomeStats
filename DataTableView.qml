@@ -37,7 +37,7 @@ Item {
 
             delegate: Component {
                 Text {
-                    text: model.date.toLocaleDateString(Qt.locale(), Locale.ShortFormat)
+                    text: model.date.toLocaleDateString(Qt.locale())
                     horizontalAlignment: Text.Center
                 }
             }

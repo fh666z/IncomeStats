@@ -15,7 +15,7 @@ ApplicationWindow {
     height  : windowMinHeight
     visible : true
 
-    signal orderViewAcceptButtonPressed(string msg)
+    signal orderViewAcceptButtonPressed(int currentRow, date selectedDate, string amount, variant type, string comment)
 
     contentItem {
         minimumHeight: windowMinHeight

@@ -2,9 +2,13 @@
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QtQml>
+
+#include <QString>
+#include <QDate>
 #include <QDebug>
 
 #include <QSqlRelationalDelegate>
+#include <QSqlRecord>
 #include <QDataWidgetMapper>
 
 #include "ViewModelTransactionHandler.hpp"
@@ -69,15 +73,32 @@ bool ViewModelTransactionHandler::connectSignals(QQmlApplicationEngine &qmlEngin
         return false;
     QObject *rootObj = rootObjects[0];
 
-    QObject::connect(rootObj, SIGNAL(orderViewAcceptButtonPressed(QString)),
-                     this, SLOT(onNewItemAddedSlot(QString)));
+    QObject::connect(rootObj, SIGNAL(orderViewAcceptButtonPressed(int, QDateTime, QString, QVariant, QString)),
+                     this, SLOT(onAcceptOrderButtonPressed(int, QDateTime, QString, QVariant, QString)));
 
     return true;
 }
 
-void ViewModelTransactionHandler::onNewItemAddedSlot(const QString &msg)
+void ViewModelTransactionHandler::onAcceptOrderButtonPressed(int currentRow, QDateTime date,
+                                                             QString amount, QVariant type,
+                                                             QString comment)
 {
-    qDebug() << "Data received from QML: " << msg << endl;
+    qDebug() << "Data received from QML: Row" << currentRow <<
+                "\nDate: " << date << "\nAmount:" << amount << "\nType:" << type <<
+                "\nComment:" << comment << endl;
+
+    QSqlRecord rec(m_dataModel->record());
+    rec.setGenerated("id", true);
+    rec.setValue("date", date);
+    rec.setValue("amount", amount.toDouble());
+    rec.setValue("type", type);
+    rec.setValue("comment", comment);
+
+    bool res = m_dataModel->insertRecord(-1, rec);
+    if (res)
+    {
+        m_dataModel->submitAll();
+    }
 }
 
 ViewModelTransactionHandler::ViewModelTransactionHandler(QObject *parent) :
