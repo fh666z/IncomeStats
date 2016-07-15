@@ -152,9 +152,9 @@ Window {
                         }
                         else
                         {
-                            mainWinId.orderViewAcceptButtonPressed(dataTableId.currentRow, dateDialog.selectedDate,
-                                                                   amountField.text, typeCombo.currentIndex+1,
-                                                                   commentText.text)
+                            mainWinId.orderViewAcceptButtonPressed(dataTableId.selectedRow,
+                                                                   dateDialog.selectedDate, amountField.text,
+                                                                   typeCombo.currentIndex+1, commentText.text)
                             close()
                         }
                     }

@@ -26,6 +26,7 @@ public:
 
 public slots:
     void onAcceptOrderButtonPressed(int currentRow, QDateTime date, QString amount, QVariant type, QString comment);
+    void onDeleteRowRequested(int currentRow);
 
 protected:
     ViewModelTransactionHandler(QObject *parent = nullptr);

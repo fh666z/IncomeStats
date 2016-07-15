@@ -11,6 +11,8 @@ Item {
     property int tableNumColumns    : 4
     property int tableMarginSizePx  : 10
 
+    property int selectedRow        : dataView.currentRow
+
     TableView {
         id    : dataView
 

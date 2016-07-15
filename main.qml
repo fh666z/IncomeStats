@@ -16,6 +16,7 @@ ApplicationWindow {
     visible : true
 
     signal orderViewAcceptButtonPressed(int currentRow, date selectedDate, string amount, variant type, string comment)
+    signal deleteRowRequested(int currentRow)
 
     contentItem {
         minimumHeight: windowMinHeight
@@ -57,6 +58,7 @@ ApplicationWindow {
             MenuItem {
                 text: qsTr("Remove")
                 shortcut: "Ctrl+D"
+                onTriggered: deleteRowRequested(dataTableId.selectedRow)
             }
         }
     }

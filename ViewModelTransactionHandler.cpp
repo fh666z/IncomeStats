@@ -76,6 +76,9 @@ bool ViewModelTransactionHandler::connectSignals(QQmlApplicationEngine &qmlEngin
     QObject::connect(rootObj, SIGNAL(orderViewAcceptButtonPressed(int, QDateTime, QString, QVariant, QString)),
                      this, SLOT(onAcceptOrderButtonPressed(int, QDateTime, QString, QVariant, QString)));
 
+    QObject::connect(rootObj, SIGNAL(deleteRowRequested(int)),
+                     this, SLOT(onDeleteRowRequested(int)));
+
     return true;
 }
 
@@ -83,10 +86,6 @@ void ViewModelTransactionHandler::onAcceptOrderButtonPressed(int currentRow, QDa
                                                              QString amount, QVariant type,
                                                              QString comment)
 {
-    qDebug() << "Data received from QML: Row" << currentRow <<
-                "\nDate: " << date << "\nAmount:" << amount << "\nType:" << type <<
-                "\nComment:" << comment << endl;
-
     QSqlRecord rec(m_dataModel->record());
     rec.setGenerated("id", true);
     rec.setValue("date", date);
@@ -99,6 +98,12 @@ void ViewModelTransactionHandler::onAcceptOrderButtonPressed(int currentRow, QDa
     {
         m_dataModel->submitAll();
     }
+}
+
+void ViewModelTransactionHandler::onDeleteRowRequested(int currentRow)
+{
+    m_dataModel->removeRow(currentRow);
+    m_dataModel->submitAll();
 }
 
 ViewModelTransactionHandler::ViewModelTransactionHandler(QObject *parent) :
