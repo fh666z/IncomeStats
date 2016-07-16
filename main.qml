@@ -1,7 +1,7 @@
 import QtQuick 2.6
 import QtQuick.Window 2.2
 import QtQuick.Controls 1.4
-
+import QtQuick.Dialogs 1.2
 
 ApplicationWindow {
 
@@ -32,7 +32,7 @@ ApplicationWindow {
             MenuItem {
                 text: qsTr("Login")
                 shortcut: "Ctrl+L"
-//                onTriggered: mainWinId.color = "blue"
+                //                onTriggered: mainWinId.color = "blue"
             }
 
             MenuItem {
@@ -52,7 +52,7 @@ ApplicationWindow {
             MenuItem {
                 text: qsTr("Edit ..")
                 shortcut: "Ctrl+E"
-                onTriggered: editOrderWindow.show()
+                onTriggered: showEditDialog()
             }
 
             MenuItem {
@@ -85,6 +85,18 @@ ApplicationWindow {
         dataTableId.enabled = false
     }
 
+    function showEditDialog(){
+        if (dataTableId.selectedRow === -1)
+        {
+            messageDlg.text = "Please select record first before editing!"
+            messageDlg.open()
+        }
+        else
+        {
+            editOrderWindow.recordIndex = dataTableId.selectedRow
+            editOrderWindow.show()
+        }
+    }
 
     OrderView {
         id : newOrderWindow
@@ -104,6 +116,13 @@ ApplicationWindow {
             id: statusTextId
             text: qsTr("Test ")
         }
+    }
+
+    MessageDialog {
+        id: messageDlg
+        title: "Information"
+        icon: StandardIcon.Information
+        onAccepted: close()
     }
 }
 

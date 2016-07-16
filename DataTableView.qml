@@ -30,7 +30,7 @@ Item {
         selectionMode: SelectionMode.SingleSelection
 
         onDoubleClicked: {
-            console.log("Edit record: " + currentRow)
+            showEditDialog()
         }
 
         TableViewColumn

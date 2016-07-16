@@ -20,6 +20,7 @@ Window {
     height: mainGroup.implicitHeight
 
     property string btnAcceptText
+    property int recordIndex
 
     Item {
         anchors.fill: parent
@@ -127,7 +128,7 @@ Window {
                     TextArea {
                         id: commentText
                         anchors.fill: parent
-                        text: ""
+                        text: recordIndex
                     }
                 }
             }
