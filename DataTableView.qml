@@ -11,7 +11,7 @@ Item {
     property int tableNumColumns    : 4
     property int tableMarginSizePx  : 10
 
-    property int     selectedRow    : dataView.currentRow
+    property int     selectedRow
     property date    selectedDate
     property double  selectedAmount
     property variant selectedType
@@ -35,15 +35,14 @@ Item {
 
         selectionMode: SelectionMode.SingleSelection
 
-        onDoubleClicked: {
-            showEditDialog()
-        }
+        onDoubleClicked : showEditDialog()
+        onCurrentRowChanged: setParameters()
 
-        onClicked : {
-            selectedDate = incomeOrderModel.get(selectedRow).date
-            selectedAmount = incomeOrderModel.get(selectedRow).amount
-            selectedType = incomeOrderModel.get(selectedRow).type
-            selectedComment = incomeOrderModel.get(selectedRow).comment
+        Keys.onPressed: {
+            if ((event.key === Qt.Key_Return) || (event.key === Qt.Key_Enter))
+              showEditDialog()
+            else
+                event.consumed = false
         }
 
         TableViewColumn
@@ -56,9 +55,10 @@ Item {
 
             delegate: Text {
                 text : {
-                    console.log(model)
-                    if ((model !== null) && (model !== undefined))
-                        text = model.date.toLocaleDateString(Qt.locale())
+                    if (styleData.row >= 0)
+                        styleData.value.toLocaleDateString(Qt.locale())
+                    else
+                        text = ""
                 }
                 horizontalAlignment: Text.Center
             }
@@ -98,5 +98,13 @@ Item {
                                 color:"#333"
                             }
                         }
+        function setParameters()
+        {
+            selectedRow = currentRow
+            selectedDate = incomeOrderModel.get(selectedRow).date
+            selectedAmount = incomeOrderModel.get(selectedRow).amount
+            selectedType = incomeOrderModel.get(selectedRow).type
+            selectedComment = incomeOrderModel.get(selectedRow).comment
+        }
     }
 }

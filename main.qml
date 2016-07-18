@@ -71,7 +71,7 @@ ApplicationWindow {
         padding             : 10
 
         DataTableView {
-            id : dataTableId
+            id          : dataTableId
         }
     }
 
