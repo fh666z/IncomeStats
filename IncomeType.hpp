@@ -32,7 +32,9 @@ public:
 
     explicit IncomeTypeModel(QObject *parent = 0);
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+
+    Q_INVOKABLE QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+    Q_INVOKABLE int getIndexFromString(const QString &typeString) const;
 
 protected:
     QHash<int, QByteArray> roleNames() const;

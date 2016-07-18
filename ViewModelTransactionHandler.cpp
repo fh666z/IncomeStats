@@ -10,6 +10,7 @@
 
 #include <QSqlRelationalDelegate>
 #include <QSqlRecord>
+#include <QSqlError>
 #include <QDataWidgetMapper>
 
 #include "ViewModelTransactionHandler.hpp"
@@ -87,20 +88,26 @@ void ViewModelTransactionHandler::onAcceptOrderButtonPressed(int currentRow, QDa
                                                              QString amount, QVariant type,
                                                              QString comment)
 {
-    QSqlRecord rec(m_dataModel->record());
+    QSqlRecord rec(m_dataModel->record(currentRow));
     rec.setGenerated("id", true);
     rec.setValue("date", date);
     rec.setValue("amount", amount.toDouble());
     rec.setValue("type", type);
     rec.setValue("comment", comment);
 
-    bool res = m_dataModel->insertRecord(-1, rec);
-    if (res)
-    {
-        m_dataModel->submitAll();
-    }
+    bool res = true;
+    if (currentRow == -1)
+        res &= m_dataModel->insertRecord(currentRow, rec);
     else
+        res &= m_dataModel->setRecord(currentRow, rec);
+
+    res &= m_dataModel->submitAll();
+
+    if (res == false)
+    {
         qDebug() << "File: " __FILE__ << "function:" << __func__ << "Adding record failed!" << endl;
+        qDebug() << "Last SQL Error:" << m_dataModel->lastError() << endl;
+    }
 }
 
 void ViewModelTransactionHandler::onDeleteRowRequested(int currentRow)

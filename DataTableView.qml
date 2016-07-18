@@ -11,7 +11,11 @@ Item {
     property int tableNumColumns    : 4
     property int tableMarginSizePx  : 10
 
-    property int selectedRow        : dataView.currentRow
+    property int     selectedRow    : dataView.currentRow
+    property date    selectedDate
+    property double  selectedAmount
+    property variant selectedType
+    property string  selectedComment
 
     TableView {
         id    : dataView
@@ -31,6 +35,13 @@ Item {
 
         onDoubleClicked: {
             showEditDialog()
+        }
+
+        onClicked : {
+            selectedDate = incomeOrderModel.get(selectedRow).date
+            selectedAmount = incomeOrderModel.get(selectedRow).amount
+            selectedType = incomeOrderModel.get(selectedRow).type
+            selectedComment = incomeOrderModel.get(selectedRow).comment
         }
 
         TableViewColumn

@@ -34,6 +34,12 @@ QVariant IncomeTypeModel::data(const QModelIndex &index, int role) const
 
 }
 
+int IncomeTypeModel::getIndexFromString(const QString &typeString) const
+{
+    QMetaEnum metaEnum = QMetaEnum::fromType<IncomeType::asEnum>();
+    return (IncomeType::asEnum)metaEnum.keysToValue(typeString.toStdString().c_str());
+}
+
 QHash<int, QByteArray> IncomeTypeModel::roleNames() const
 {
     QHash<int, QByteArray> roles;

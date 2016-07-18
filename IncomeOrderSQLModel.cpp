@@ -28,6 +28,16 @@ QVariant IncomeOrderSQLModel::data(const QModelIndex &index, int role) const
     }
 }
 
+QVariantMap IncomeOrderSQLModel::get(int idx) const {
+  QVariantMap map;
+
+  foreach(int k, roleNames().keys()) {
+    map[roleNames().value(k)] = data(index(idx, 0), k);
+  }
+
+  return map;
+}
+
 void IncomeOrderSQLModel::generateRoleNames()
 {
     roles.clear();

@@ -30,45 +30,45 @@ ApplicationWindow {
             title: "Program"
 
             MenuItem {
-                text: qsTr("Login")
+                text    : qsTr("Login")
                 shortcut: "Ctrl+L"
                 //                onTriggered: mainWinId.color = "blue"
             }
 
             MenuItem {
-                text: qsTr("Exit")
-                shortcut: StandardKey.Quit
-                onTriggered: Qt.quit()
+                text        : qsTr("Exit")
+                shortcut    : StandardKey.Quit
+                onTriggered : Qt.quit()
             }
         }
         Menu {
             title: "Contract"
             MenuItem {
-                text: qsTr("Add ..")
-                shortcut: "Ctrl+A"
-                onTriggered: newOrderWindow.show()
+                text        : qsTr("Add ..")
+                shortcut    : "Ctrl+A"
+                onTriggered : newOrderWindow.show()
             }
 
             MenuItem {
-                text: qsTr("Edit ..")
-                shortcut: "Ctrl+E"
-                onTriggered: showEditDialog()
+                text        : qsTr("Edit ..")
+                shortcut    : "Ctrl+E"
+                onTriggered : showEditDialog()
             }
 
             MenuItem {
-                text: qsTr("Remove")
-                shortcut: "Ctrl+D"
-                onTriggered: deleteRowRequested(dataTableId.selectedRow)
+                text        : qsTr("Remove")
+                shortcut    : "Ctrl+D"
+                onTriggered : deleteRowRequested(dataTableId.selectedRow)
             }
         }
     }
 
     Column {
-        id: contentColumn
-        anchors.fill: parent
-        anchors.topMargin:  dataTableId.tableMarginSizePx
-        anchors.leftMargin: dataTableId.tableMarginSizePx
-        padding: 10
+        id                  : contentColumn
+        anchors.fill        : parent
+        anchors.topMargin   :  dataTableId.tableMarginSizePx
+        anchors.leftMargin  : dataTableId.tableMarginSizePx
+        padding             : 10
 
         DataTableView {
             id : dataTableId
@@ -94,35 +94,43 @@ ApplicationWindow {
         else
         {
             editOrderWindow.recordIndex = dataTableId.selectedRow
+            editOrderWindow.dateChosen  = dataTableId.selectedDate
+            editOrderWindow.amountText  = dataTableId.selectedAmount
+            editOrderWindow.typeIndex   = incomeTypeModel.getIndexFromString(dataTableId.selectedType)
+            editOrderWindow.commentText = dataTableId.selectedComment
             editOrderWindow.show()
         }
     }
 
     OrderView {
-        id : newOrderWindow
-        title: "Add new ..."
-        btnAcceptText : "Add"
+        id              : newOrderWindow
+        title           : "Add new ..."
+        btnAcceptText   : "Add"
+        recordIndex     : -1
     }
 
     OrderView {
-        id : editOrderWindow
-        title: "Edit Order ..."
-        btnAcceptText : "Edit"
+        id              : editOrderWindow
+        title           : "Edit Order ..."
+        btnAcceptText   : "Edit"
     }
 
     statusBar: StatusBar {
         id: appStatusBar
         Text {
             id: statusTextId
-            text: qsTr("Test ")
+            text: qsTr("Date: "       + dataTableId.selectedDate.toLocaleDateString(Qt.locale()) +
+                       " | Amount: "  + dataTableId.selectedAmount +
+                       " | Type: "    + incomeTypeModel.getIndexFromString(dataTableId.selectedType) +
+                       " | Comment: " + dataTableId.selectedComment)
         }
     }
 
     MessageDialog {
-        id: messageDlg
-        title: "Information"
-        icon: StandardIcon.Information
-        onAccepted: close()
+        id          : messageDlg
+        title       : "Information"
+        icon        : StandardIcon.Information
+        onAccepted  : close()
     }
 }
 

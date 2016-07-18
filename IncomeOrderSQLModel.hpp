@@ -17,10 +17,12 @@ private:
 
 public:
     Q_INVOKABLE QVariant data(const QModelIndex &index, int role=Qt::DisplayRole ) const;
+    Q_INVOKABLE QVariantMap get(int idx) const;
     virtual QHash<int, QByteArray> roleNames() const;
 
     void generateRoleNames();
     virtual bool select();
+
 };
 
 #endif // INCOMEORDERSQLMODEL_H

@@ -20,7 +20,11 @@ Window {
     height: mainGroup.implicitHeight
 
     property string btnAcceptText
-    property int recordIndex
+    property int    recordIndex
+    property date   dateChosen  : datePickerId.calendarDate
+    property string amountText  : ""
+    property int    typeIndex   : 0
+    property string commentText : ""
 
     Item {
         anchors.fill: parent
@@ -46,16 +50,14 @@ Window {
                     implicitWidth: 250
 
                     TextField {
-                        id: dateDialog
+                        id: dateDialogId
 
-                        property date selectedDate: datePickerId.calendarDate
+                        property date selectedDate: dateChosen
 
                         anchors.fill: parent
                         horizontalAlignment: Text.Center
                         style: defaultFieldStyle
-
-                        text: datePickerId.calendarDate.toLocaleDateString(Qt.locale())
-
+                        text: dateChosen.toLocaleDateString(Qt.locale())
                         MouseArea {
                             anchors.fill: parent
                             onClicked: datePickerId.show()
@@ -75,12 +77,11 @@ Window {
                     implicitWidth: 250
 
                     TextField {
-                        id: amountField
-                        anchors.fill: parent
-                        horizontalAlignment: Text.Center
-                        style : defaultFieldStyle
-
-                        //onFocusChanged:
+                        id                  : amountFieldId
+                        anchors.fill        : parent
+                        horizontalAlignment : Text.Center
+                        style               : defaultFieldStyle
+                        text                : amountText
 
                         onActiveFocusChanged: {
                             if ((focus === true) && (style === warningFieldStyle)) {
@@ -107,9 +108,10 @@ Window {
                     implicitWidth: 250
 
                     ComboBox {
-                        id: typeCombo
-                        model : incomeTypeModel
+                        id              : typeCombo
+                        model           : incomeTypeModel
                         anchors.centerIn: parent
+                        currentIndex    : typeIndex
                     }
                 }
             }
@@ -122,13 +124,12 @@ Window {
                 GroupBox {
                     id: commentGroup
                     title: qsTr("Comment:")
-
                     implicitWidth: 250
 
                     TextArea {
-                        id: commentText
+                        id: commentTextId
                         anchors.fill: parent
-                        text: recordIndex
+                        text: commentText
                     }
                 }
             }
@@ -144,18 +145,20 @@ Window {
 
                     text: qsTr(btnAcceptText)
                     onClicked: {
-                        if (amountField.text === "")
+                        if (amountFieldId.text === "")
                         {
                             // Validate amount field
-                            amountField.style = warningFieldStyle
-                            amountField.text = "Please fill an amount"
-                            amountField.focus = false
+                            amountFieldId.style = warningFieldStyle
+                            amountFieldId.text = "Please fill an amount"
+                            amountFieldId.focus = false
                         }
                         else
                         {
-                            mainWinId.orderViewAcceptButtonPressed(dataTableId.selectedRow,
-                                                                   dateDialog.selectedDate, amountField.text,
-                                                                   typeCombo.currentIndex+1, commentText.text)
+                            mainWinId.orderViewAcceptButtonPressed(recordIndex,
+                                                                   dateDialogId.selectedDate,
+                                                                   amountFieldId.text,
+                                                                   typeCombo.currentIndex+1,
+                                                                   commentTextId.text)
                             close()
                         }
                     }
