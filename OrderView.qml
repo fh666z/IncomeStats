@@ -29,7 +29,12 @@ Window {
     Item {
         anchors.fill: parent
         focus: true
-        Keys.onEscapePressed: winId.close()
+        Keys.onEscapePressed: orderWindowId.close()
+
+        Keys.onPressed: {
+            console.log(event.key)
+            event.consumede = true
+        }
     }
 
     GroupBox {
@@ -144,7 +149,12 @@ Window {
                     objectName: btnAcceptText
 
                     text: qsTr(btnAcceptText)
-                    onClicked: {
+                    Keys.onReturnPressed: handleAccept()
+                    Keys.onEnterPressed: handleAccept()
+                    onClicked: handleAccept()
+
+                    function handleAccept()
+                    {
                         if (amountFieldId.text === "")
                         {
                             // Validate amount field
@@ -167,6 +177,8 @@ Window {
                 Button {
                     id: btnCancel
                     text: qsTr("Cancel")
+                    Keys.onReturnPressed: close()
+                    Keys.onEnterPressed: close()
                     onClicked: close()
                 }
             }

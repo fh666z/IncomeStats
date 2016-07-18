@@ -27,36 +27,36 @@ ApplicationWindow {
         id : mainMenuId
 
         Menu {
-            title: "Program"
+            title: "&Program"
 
             MenuItem {
-                text    : qsTr("Login")
+                text    : qsTr("&Login")
                 shortcut: "Ctrl+L"
                 //                onTriggered: mainWinId.color = "blue"
             }
 
             MenuItem {
-                text        : qsTr("Exit")
+                text        : qsTr("E&xit")
                 shortcut    : StandardKey.Quit
                 onTriggered : Qt.quit()
             }
         }
         Menu {
-            title: "Contract"
+            title: "Income &Order"
             MenuItem {
-                text        : qsTr("Add ..")
+                text        : qsTr("&Add ..")
                 shortcut    : "Ctrl+A"
                 onTriggered : newOrderWindow.show()
             }
 
             MenuItem {
-                text        : qsTr("Edit ..")
+                text        : qsTr("&Edit ..")
                 shortcut    : "Ctrl+E"
                 onTriggered : showEditDialog()
             }
 
             MenuItem {
-                text        : qsTr("Remove")
+                text        : qsTr("&Remove")
                 shortcut    : "Ctrl+D"
                 onTriggered : deleteRowRequested(dataTableId.selectedRow)
             }
@@ -73,6 +73,39 @@ ApplicationWindow {
         DataTableView {
             id          : dataTableId
         }
+    }
+
+    statusBar: StatusBar {
+        id: appStatusBar
+        Text {
+            id: statusTextId
+            text: qsTr(" Row: "  + dataTableId.selectedRow +
+                       " | Date: "       + dataTableId.selectedDate.toLocaleDateString(Qt.locale()) +
+                       " | Amount: "  + dataTableId.selectedAmount +
+                       " | Type: "    + incomeTypeModel.getIndexFromString(dataTableId.selectedType) +
+                       " | Comment: " + dataTableId.selectedComment)
+        }
+    }
+
+    OrderView {
+        id              : newOrderWindow
+        title           : "Add new ..."
+        btnAcceptText   : "Add"
+        //recordIndex     : -1
+    }
+
+    OrderView {
+        id              : editOrderWindow
+        title           : "Edit Order ..."
+        btnAcceptText   : "Edit"
+    }
+
+    MessageDialog {
+        id          : messageDlg
+        title       : "Information"
+        icon        : StandardIcon.Information
+        modality    : Qt.WindowModal
+        onAccepted  : close()
     }
 
     function enableMainView()
@@ -100,37 +133,6 @@ ApplicationWindow {
             editOrderWindow.commentText = dataTableId.selectedComment
             editOrderWindow.show()
         }
-    }
-
-    OrderView {
-        id              : newOrderWindow
-        title           : "Add new ..."
-        btnAcceptText   : "Add"
-        recordIndex     : -1
-    }
-
-    OrderView {
-        id              : editOrderWindow
-        title           : "Edit Order ..."
-        btnAcceptText   : "Edit"
-    }
-
-    statusBar: StatusBar {
-        id: appStatusBar
-        Text {
-            id: statusTextId
-            text: qsTr("Date: "       + dataTableId.selectedDate.toLocaleDateString(Qt.locale()) +
-                       " | Amount: "  + dataTableId.selectedAmount +
-                       " | Type: "    + incomeTypeModel.getIndexFromString(dataTableId.selectedType) +
-                       " | Comment: " + dataTableId.selectedComment)
-        }
-    }
-
-    MessageDialog {
-        id          : messageDlg
-        title       : "Information"
-        icon        : StandardIcon.Information
-        onAccepted  : close()
     }
 }
 

@@ -11,7 +11,7 @@ Item {
     property int tableNumColumns    : 4
     property int tableMarginSizePx  : 10
 
-    property int     selectedRow
+    property int     selectedRow    : dataView.currentRow
     property date    selectedDate
     property double  selectedAmount
     property variant selectedType
