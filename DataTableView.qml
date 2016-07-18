@@ -23,7 +23,9 @@ Item {
         width : tableColumnWidth * tableNumColumns
         height: tableMinHeight
 
-        model: incomeOrderModel
+        focus : true
+
+        model : incomeOrderModel
 
         alternatingRowColors: true
         backgroundVisible   : true
@@ -52,11 +54,13 @@ Item {
             title   : "Date"
             width   : tableColumnWidth
 
-            delegate: Component {
-                Text {
-                    text: model.date.toLocaleDateString(Qt.locale())
-                    horizontalAlignment: Text.Center
+            delegate: Text {
+                text : {
+                    console.log(model)
+                    if ((model !== null) && (model !== undefined))
+                        text = model.date.toLocaleDateString(Qt.locale())
                 }
+                horizontalAlignment: Text.Center
             }
         }
         TableViewColumn

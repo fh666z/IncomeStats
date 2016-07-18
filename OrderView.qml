@@ -201,6 +201,7 @@ Window {
 
     DatePicker {
         id: datePickerId
+        onCalendarDateChanged: dateChosen = calendarDate
     }
 }
 
