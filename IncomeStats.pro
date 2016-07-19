@@ -1,5 +1,7 @@
 TEMPLATE = app
 
+RC_ICONS = images/app_icon.ico
+
 QT += qml quick sql widgets
 CONFIG += c++1y
 
@@ -34,3 +36,6 @@ HEADERS += \
     IncomeOrderSQLModel.hpp \
     IncomeType.hpp \
     ViewModelTransactionHandler.hpp
+
+DISTFILES += \
+    images/app_icon.ico

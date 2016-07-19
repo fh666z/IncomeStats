@@ -9,14 +9,18 @@ ApplicationWindow {
     property int windowMinWidth : dataTableId.tableColumnWidth * dataTableId.tableNumColumns + 2 * dataTableId.tableMarginSizePx
     property int windowMinHeight: dataTableId.tableMinHeight + windowOffset
 
+    property string statusText
+
     id      : mainWinId
     title   : "Income Stats"
     width   : windowMinWidth
     height  : windowMinHeight
     visible : true
 
+
     signal orderViewAcceptButtonPressed(int currentRow, date selectedDate, string amount, variant type, string comment)
     signal deleteRowRequested(int currentRow)
+    signal dbExportRequest(string outFile)
 
     contentItem {
         minimumHeight: windowMinHeight
@@ -32,7 +36,22 @@ ApplicationWindow {
             MenuItem {
                 text    : qsTr("&Login")
                 shortcut: "Ctrl+L"
-                //                onTriggered: mainWinId.color = "blue"
+            }
+
+            MenuItem {
+                text    : qsTr("&Import Data")
+                shortcut: "Ctrl+I"
+                onTriggered: importExportFileDlg.open()
+            }
+
+            MenuItem {
+                text    : qsTr("E&xport Data")
+                shortcut: "Ctrl+X"
+                onTriggered: {
+                    importExportDlg.selectExisting = false
+                    importExportDlg.operation = "export"
+                    importExportDlg.open()
+                }
             }
 
             MenuItem {
@@ -75,15 +94,16 @@ ApplicationWindow {
         }
     }
 
+    onNotifyUIStatus {
+        statusText = "Shano"
+    }
+
+
     statusBar: StatusBar {
         id: appStatusBar
         Text {
             id: statusTextId
-            text: qsTr(" Row: "  + dataTableId.selectedRow +
-                       " | Date: "       + dataTableId.selectedDate.toLocaleDateString(Qt.locale()) +
-                       " | Amount: "  + dataTableId.selectedAmount +
-                       " | Type: "    + incomeTypeModel.getIndexFromString(dataTableId.selectedType) +
-                       " | Comment: " + dataTableId.selectedComment)
+            text: qsTr(statusText)
         }
     }
 
@@ -106,6 +126,26 @@ ApplicationWindow {
         icon        : StandardIcon.Information
         modality    : Qt.WindowModal
         onAccepted  : close()
+    }
+
+    FileDialog {
+        id: importExportDlg
+
+        property string operation
+
+        title: "Please choose a CSV file to " + operation
+
+        folder: shortcuts.home
+        modality: Qt.WindowModal
+        nameFilters: [ "CSV files (*.csv)"]
+        onAccepted: {
+            mainWinId.dbExportRequest(importExportDlg.fileUrl)
+            close()
+        }
+        onRejected: {
+            console.log("Canceled")
+            close()
+        }
     }
 
     function enableMainView()

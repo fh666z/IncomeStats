@@ -78,8 +78,9 @@ bool ViewModelTransactionHandler::connectSignals(QQmlApplicationEngine &qmlEngin
     QObject::connect(rootObj, SIGNAL(orderViewAcceptButtonPressed(int, QDateTime, QString, QVariant, QString)),
                      this, SLOT(onAcceptOrderButtonPressed(int, QDateTime, QString, QVariant, QString)));
 
-    QObject::connect(rootObj, SIGNAL(deleteRowRequested(int)),
-                     this, SLOT(onDeleteRowRequested(int)));
+    QObject::connect(rootObj, SIGNAL(deleteRowRequested(int)), this, SLOT(onDeleteRowRequested(int)));
+    QObject::connect(rootObj, SIGNAL(dbExportRequest(QString)), this, SLOT(onDbExportRequest(QString)));
+
 
     return true;
 }
@@ -120,6 +121,17 @@ void ViewModelTransactionHandler::onDeleteRowRequested(int currentRow)
     }
     else
         qDebug() << "File: " __FILE__ << "function:" << __func__ << "Cannot delete row:" << currentRow << endl;
+}
+
+void ViewModelTransactionHandler::onDbExportRequest(QString filePath)
+{
+    qDebug() << "Exporting to file: " << filePath << "..." << endl;
+    bool success = m_dataModel->exportDataToFile(filePath);
+    if (success)
+        qDebug() << "Export successfull!" << endl;
+    else
+        qDebug() << "Export failed!" << endl;
+
 }
 
 ViewModelTransactionHandler::ViewModelTransactionHandler(QObject *parent) :

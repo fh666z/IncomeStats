@@ -23,6 +23,8 @@ public:
     void generateRoleNames();
     virtual bool select();
 
+    bool exportDataToFile(const QString &filePath);
+
 };
 
 #endif // INCOMEORDERSQLMODEL_H

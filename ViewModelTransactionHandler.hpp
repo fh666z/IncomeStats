@@ -24,9 +24,13 @@ public:
     void connectModelsToView(QQmlApplicationEngine &qmlEngine);
     bool connectSignals(QQmlApplicationEngine &qmlEngine);
 
+signals:
+    void notifyUIStatus(QString status);
+
 public slots:
     void onAcceptOrderButtonPressed(int currentRow, QDateTime date, QString amount, QVariant type, QString comment);
     void onDeleteRowRequested(int currentRow);
+    void onDbExportRequest(QString filePath);
 
 protected:
     ViewModelTransactionHandler(QObject *parent = nullptr);

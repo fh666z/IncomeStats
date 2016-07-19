@@ -1,5 +1,9 @@
 #include "IncomeOrderSQLModel.hpp"
 #include <QSqlRecord>
+#include <QFile>
+#include <QMap>
+#include <QDate>
+#include <QDebug>
 
 
 IncomeOrderSQLModel::IncomeOrderSQLModel(QObject *parent, QSqlDatabase *db) :
@@ -61,4 +65,40 @@ bool IncomeOrderSQLModel::select()
         generateRoleNames();
 
     return ret;
+}
+
+bool IncomeOrderSQLModel::exportDataToFile(const QString &filePath)
+{
+    bool success = false;
+    QString fileDesc(filePath);
+    fileDesc.replace("file:///", "");
+    QFile exportFile(fileDesc);
+
+    success = exportFile.open(QIODevice::WriteOnly);
+    if (success)
+    {
+        for (int i = 0; i < rowCount(); ++i)
+        {
+            QVariantMap rec = get(i);
+
+            foreach (QVariant value, rec)
+            {
+                if (QVariant::Date == value.type())
+                {
+                    exportFile.write(value.toDate().toString("yyyy-MM-dd").toUtf8());
+                }
+                else
+                    exportFile.write(value.toByteArray());
+                exportFile.write(",");
+            }
+
+            exportFile.write("\n");
+        }
+
+        exportFile.close();
+    }
+    else
+        qDebug() << "Opening export file" << filePath << "failed!" << endl;
+
+    return success;
 }

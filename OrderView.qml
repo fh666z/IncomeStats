@@ -8,8 +8,6 @@ import QtQuick.Controls.Styles 1.4
 import CPPEnums 1.0
 
 Window {
-    id: orderWindowId
-
     flags: Qt.Dialog | Qt.Window
     modality: Qt.WindowModal
 

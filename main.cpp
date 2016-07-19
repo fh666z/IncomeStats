@@ -1,14 +1,14 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+#include <QIcon>
+
 
 #include "ViewModelTransactionHandler.hpp"
 
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
-
     QQmlApplicationEngine engine;
-
 
     ViewModelTransactionHandler::getHandler()->createModels(&app);
     ViewModelTransactionHandler::getHandler()->registerTypes();
