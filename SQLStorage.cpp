@@ -66,7 +66,8 @@ bool SQLStorage::prepareStorage()
     m_dbConnDefault->setUserName(QSQL_USER);
     m_dbConnDefault->setPassword(QSQL_USER_PASS);
 
-    qDebug() << "Database is valid: " << m_dbConnDefault->isValid() << endl;
+    if (m_dbConnDefault->isValid() == false)
+        qDebug() << "Invalid Database!" << endl;
 
     m_state = StorageState::Prepared;
 
@@ -102,11 +103,7 @@ bool SQLStorage::open()
             qDebug() << "Prepare SQL query failed:" << m_dbConnDefault->lastError().text() << endl;
 
         // Exec succeeded
-        if (success)
-        {
-            qDebug() << "Database ready!" << endl;
-        }
-        else
+        if (success == false)
             qDebug() << "Create table 'records' failed:" << m_dbConnDefault->lastError().text() << endl;
 
 
