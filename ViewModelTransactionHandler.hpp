@@ -33,7 +33,7 @@ public slots:
     void onDbExportRequest(QString filePath);
 
 protected:
-    ViewModelTransactionHandler(QObject *parent = nullptr);
+    ViewModelTransactionHandler(QObject *parent =    nullptr);
 
 private:
     static ViewModelTransactionHandler *m_dataHandler;

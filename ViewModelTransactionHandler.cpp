@@ -80,9 +80,8 @@ bool ViewModelTransactionHandler::connectSignals(QQmlApplicationEngine &qmlEngin
     QObject::connect(orderView, SIGNAL(acceptButtonPressed(int, QDateTime, QString, QVariant, QString)),
                      this, SLOT(onAcceptButtonPressed(int, QDateTime, QString, QVariant, QString)));
 
-    QObject::connect(rootObj, SIGNAL(deleteRowRequested(int)), this, SLOT(onDeleteRowRequested(int)));
-    QObject::connect(rootObj, SIGNAL(dbExportRequest(QString)), this, SLOT(onDbExportRequest(QString)));
-    QObject::connect(this, SIGNAL(notifyStatus(QString)), rootObj, SLOT(onNotifyStatus(QString)));
+    QObject::connect(rootObj, SIGNAL(deleteRowRequested(int)),  this,    SLOT(onDeleteRowRequested(int)));
+    QObject::connect(rootObj, SIGNAL(dbExportRequest(QString)), this,    SLOT(onDbExportRequest(QString)));
 
     return true;
 }

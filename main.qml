@@ -9,8 +9,6 @@ ApplicationWindow {
     property int windowMinWidth : dataTableId.tableColumnWidth * dataTableId.tableNumColumns + 2 * dataTableId.tableMarginSizePx
     property int windowMinHeight: dataTableId.tableMinHeight + windowOffset
 
-    property string statusText
-
     id      : mainWinId
     title   : "Income Stats"
     width   : windowMinWidth
@@ -19,11 +17,6 @@ ApplicationWindow {
 
     signal deleteRowRequested(int currentRow)
     signal dbExportRequest(string outFile)
-
-    Connections {
-        target: viewManagerClass
-        onNotifyStatus : statusText = status
-    }
 
     contentItem {
         minimumHeight: windowMinHeight
@@ -38,7 +31,14 @@ ApplicationWindow {
         id: appStatusBar
         Text {
             id: statusTextId
-            text: qsTr(statusText)
+            text: qsTr("")
+        }
+    }
+
+    Connections {
+        target: viewManagerClass
+        onNotifyStatus : {
+            statusTextId.text = status
         }
     }
 
