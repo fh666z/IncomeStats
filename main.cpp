@@ -17,6 +17,7 @@ int main(int argc, char *argv[])
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
 
     ViewManager::getHandler()->connectSignals(engine);
+    //ViewManager::getHandler()->createViewMapping(engine);
 
     return app.exec();
 }

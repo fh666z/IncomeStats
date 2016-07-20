@@ -31,7 +31,6 @@ Item {
         backgroundVisible   : true
         headerVisible       : true
         frameVisible        : false
-        sortIndicatorVisible: true
 
         selectionMode: SelectionMode.SingleSelection
 

@@ -53,14 +53,16 @@ Window {
                     implicitWidth: 250
 
                     TextField {
-                        id: dateDialogId
-
                         property date selectedDate: dateChosen
 
-                        anchors.fill: parent
-                        horizontalAlignment: Text.Center
-                        style: defaultFieldStyle
-                        text: dateChosen.toLocaleDateString(Qt.locale())
+                        id          : dateDialogId
+                        objectName  : "dateFieldObj"
+
+                        anchors.fill        : parent
+                        horizontalAlignment : Text.Center
+
+                        style   : defaultFieldStyle
+                        text    : dateChosen.toLocaleDateString(Qt.locale())
                         MouseArea {
                             anchors.fill: parent
                             onClicked: datePickerId.show()
@@ -81,6 +83,7 @@ Window {
 
                     TextField {
                         id                  : amountFieldId
+                        objectName          : "amountFieldObj"
                         anchors.fill        : parent
                         horizontalAlignment : Text.Center
                         style               : defaultFieldStyle
@@ -112,6 +115,7 @@ Window {
 
                     ComboBox {
                         id              : typeCombo
+                        objectName      : "typeFieldObj"
                         model           : incomeTypeModel
                         anchors.centerIn: parent
                         currentIndex    : typeIndex
@@ -130,7 +134,8 @@ Window {
                     implicitWidth: 250
 
                     TextArea {
-                        id: commentTextId
+                        id          : commentTextId
+                        objectName  : "commentFieldObj"
                         anchors.fill: parent
                         text: commentText
                     }
@@ -227,11 +232,11 @@ Window {
         {
             title           = "Edit Order ...";
             btnAcceptText   = "Edit";
-            recordIndex = dataTableId.selectedRow;
-            dateChosen  = dataTableId.selectedDate;
-            amountText  = dataTableId.selectedAmount;
-            typeIndex   = incomeTypeModel.getIndexFromString(dataTableId.selectedType);
-            commentText = dataTableId.selectedComment;
+//            recordIndex = dataTableId.selectedRow;
+//            dateChosen  = dataTableId.selectedDate;
+//            amountText  = dataTableId.selectedAmount;
+//            typeIndex   = incomeTypeModel.getIndexFromString(dataTableId.selectedType);
+//            commentText = dataTableId.selectedComment;
             show();
         }
     }

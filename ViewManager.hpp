@@ -23,6 +23,7 @@ public:
     void registerTypes();
     void connectModelsToView(QQmlApplicationEngine &qmlEngine);
     bool connectSignals(QQmlApplicationEngine &qmlEngine);
+    void createViewMapping(QQmlApplicationEngine &qmlEngine);
 
 signals:
     Q_SIGNAL void notifyStatus(QString status);

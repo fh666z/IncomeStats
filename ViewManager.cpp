@@ -1,11 +1,10 @@
-#include <QObject>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
-#include <QtQml>
 
 #include <QString>
 #include <QDate>
 
+#include <QDataWidgetMapper>
 #include <QSqlRelationalDelegate>
 #include <QSqlRecord>
 #include <QSqlError>
@@ -34,17 +33,10 @@ bool ViewManager::createModels(QObject *parent)
         m_dataModel = new IncomeOrderSQLModel(parent, (QSqlDatabase *)(Storage::getStorage()->getConnection()));
         m_dataModel->setTable("records");
         m_dataModel->setEditStrategy(QSqlTableModel::OnManualSubmit);
+        m_dataModel->setSort(1, Qt::AscendingOrder);
         m_dataModel->select();
 
         m_typeModel = new IncomeTypeModel();
-
-//        QDataWidgetMapper *mapper = new QDataWidgetMapper();
-//        mapper->setModel(m_dataModel);
-//        mapper->setItemDelegate(new QSqlRelationalDelegate());
-    //    mapper->addMapping(nameEdit, model->fieldIndex("name"));
-    //    mapper->addMapping(addressEdit, model->fieldIndex("address"));
-    //    mapper->addMapping(typeComboBox, typeIndex);
-//        mapper->toFirst();
     }
 
     return exists;
@@ -69,7 +61,7 @@ bool ViewManager::connectSignals(QQmlApplicationEngine &qmlEngine)
     auto rootObjects = qmlEngine.rootObjects();
     if (rootObjects.count() < 1)
     {
-        emit notifyError("Storage does NOT exist!", "", true);
+        emit notifyError("UI not initialized properly!", "", true);
         return false;
     }
 
@@ -83,6 +75,30 @@ bool ViewManager::connectSignals(QQmlApplicationEngine &qmlEngine)
     QObject::connect(rootObj, SIGNAL(dbExportRequest(QString)), this, SLOT(onDbExportRequest(QString)));
 
     return true;
+}
+
+void ViewManager::createViewMapping(QQmlApplicationEngine &qmlEngine)
+{
+    auto rootObjects = qmlEngine.rootObjects();
+    QObject *rootObj = rootObjects[0];
+
+    QDataWidgetMapper *mapper = new QDataWidgetMapper();
+    mapper->setModel(m_dataModel);
+    mapper->setItemDelegate(new QSqlRelationalDelegate());
+
+    QWidget *qmlObj = rootObj->findChild<QWidget*>("amountFieldObj");
+    mapper->addMapping(qmlObj, m_dataModel->fieldIndex("amount"));
+
+    qmlObj = rootObj->findChild<QWidget*>("dateFieldObj");
+    mapper->addMapping(qmlObj, m_dataModel->fieldIndex("date"));
+
+    qmlObj = rootObj->findChild<QWidget*>("typeFieldObj");
+    mapper->addMapping(qmlObj, m_dataModel->fieldIndex("type"));
+
+    qmlObj = rootObj->findChild<QWidget*>("commentFieldObj");
+    mapper->addMapping(qmlObj, m_dataModel->fieldIndex("comment"));
+
+    mapper->toFirst();
 }
 
 void ViewManager::onAcceptButtonPressed(int currentRow, QDateTime date,
@@ -146,7 +162,10 @@ void ViewManager::onDbExportRequest(QString filePath)
 
 }
 
-ViewManager::ViewManager(QObject *parent) : QObject(parent)
+ViewManager::ViewManager(QObject *parent) :
+    QObject(parent),
+    m_dataModel(nullptr),
+    m_typeModel(nullptr)
 {
     Q_UNUSED(parent)
     SQLStorage::create();
