@@ -57,19 +57,9 @@ ApplicationWindow {
         }
     }
 
-    // Window for NEW order
+    // Window for order ADD/EDIT
     OrderView {
-        id              : newOrderWindow
-        title           : "Add new ..."
-        btnAcceptText   : "Add"
-        recordIndex     : -1
-    }
-
-    // Windows for EDITING orders
-    OrderView {
-        id              : editOrderWindow
-        title           : "Edit Order ..."
-        btnAcceptText   : "Edit"
+        id  : оrderWindow
     }
 
     // Message dialog for errors/warnings
@@ -84,33 +74,6 @@ ApplicationWindow {
     // Dialog window for selecting file for Import/Export
     ImportExport {
         id: importExportDlg
-    }
-
-    function enableMainView()
-    {
-        dataTableId.enabled = true
-    }
-
-    function disableMainView()
-    {
-        dataTableId.enabled = false
-    }
-
-    function showEditDialog(){
-        if (dataTableId.selectedRow === -1)
-        {
-            messageDlg.text = "Please select record first before editing!";
-            messageDlg.open();
-        }
-        else
-        {
-            editOrderWindow.recordIndex = dataTableId.selectedRow;
-            editOrderWindow.dateChosen  = dataTableId.selectedDate;
-            editOrderWindow.amountText  = dataTableId.selectedAmount;
-            editOrderWindow.typeIndex   = incomeTypeModel.getIndexFromString(dataTableId.selectedType);
-            editOrderWindow.commentText = dataTableId.selectedComment;
-            editOrderWindow.show();
-        }
     }
 }
 

@@ -41,13 +41,13 @@ MenuBar {
         MenuItem {
             text        : qsTr("&Add ..")
             shortcut    : "Ctrl+A"
-            onTriggered : newOrderWindow.show()
+            onTriggered : оrderWindow.showAddDialog()
         }
         
         MenuItem {
             text        : qsTr("&Edit ..")
             shortcut    : "Ctrl+E"
-            onTriggered : showEditDialog()
+            onTriggered : оrderWindow.showEditDialog()
         }
         
         MenuItem {

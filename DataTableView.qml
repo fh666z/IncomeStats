@@ -35,12 +35,12 @@ Item {
 
         selectionMode: SelectionMode.SingleSelection
 
-        onDoubleClicked : showEditDialog()
+        onDoubleClicked : оrderWindow.showEditDialog()
         onCurrentRowChanged: setParameters()
 
         Keys.onPressed: {
             if ((event.key === Qt.Key_Return) || (event.key === Qt.Key_Enter))
-              showEditDialog()
+                оrderWindow.showEditDialog()
             else
                 event.consumed = false
         }

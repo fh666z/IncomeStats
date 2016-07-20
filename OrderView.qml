@@ -30,11 +30,6 @@ Window {
         anchors.fill: parent
         focus: true
         Keys.onEscapePressed: orderWindowId.close()
-
-        Keys.onPressed: {
-            console.log(event.key)
-            event.consumede = true
-        }
     }
 
     GroupBox {
@@ -215,7 +210,35 @@ Window {
         id: datePickerId
         onCalendarDateChanged: dateChosen = calendarDate
     }
+
+    function showAddDialog(){
+        title           = "Add new ...";
+        btnAcceptText   = "Add";
+        recordIndex     =  -1;
+        show();
+    }
+
+    function showEditDialog(){
+        if (dataTableId.selectedRow === -1)
+        {
+            messageDlg.text = "Please select record first before editing!";
+            messageDlg.open();
+        }
+        else
+        {
+            title           = "Edit Order ...";
+            btnAcceptText   = "Edit";
+            recordIndex = dataTableId.selectedRow;
+            dateChosen  = dataTableId.selectedDate;
+            amountText  = dataTableId.selectedAmount;
+            typeIndex   = incomeTypeModel.getIndexFromString(dataTableId.selectedType);
+            commentText = dataTableId.selectedComment;
+            show();
+        }
+    }
 }
+
+
 
 
 
