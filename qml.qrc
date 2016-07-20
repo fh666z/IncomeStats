@@ -7,5 +7,7 @@
         <file>images/selectedrow.png</file>
         <file>OrderView.qml</file>
         <file>DatePicker.qml</file>
+        <file>MainMenu.qml</file>
+        <file>ImportExport.qml</file>
     </qresource>
 </RCC>

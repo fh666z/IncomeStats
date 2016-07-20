@@ -64,6 +64,7 @@ void ViewModelTransactionHandler::connectModelsToView(QQmlApplicationEngine &qml
 {
     QQmlContext *qmlContext = qmlEngine.rootContext();
 
+    qmlContext->setContextProperty("viewManagerClass", this);
     qmlContext->setContextProperty("incomeTypeModel", m_typeModel);
     qmlContext->setContextProperty("incomeOrderModel", m_dataModel);
 }
@@ -80,7 +81,7 @@ bool ViewModelTransactionHandler::connectSignals(QQmlApplicationEngine &qmlEngin
 
     QObject::connect(rootObj, SIGNAL(deleteRowRequested(int)), this, SLOT(onDeleteRowRequested(int)));
     QObject::connect(rootObj, SIGNAL(dbExportRequest(QString)), this, SLOT(onDbExportRequest(QString)));
-
+    QObject::connect(this, SIGNAL(notifyStatus(QString)), rootObj, SLOT(onNotifyStatus(QString)));
 
     return true;
 }
@@ -106,6 +107,7 @@ void ViewModelTransactionHandler::onAcceptOrderButtonPressed(int currentRow, QDa
 
     if (res == false)
     {
+        //emit notifyStatus("File: " + __FILE__ + "function:" + __func__ + "Adding record failed!");
         qDebug() << "File: " __FILE__ << "function:" << __func__ << "Adding record failed!" << endl;
         qDebug() << "Last SQL Error:" << m_dataModel->lastError() << endl;
     }
@@ -115,7 +117,8 @@ void ViewModelTransactionHandler::onDeleteRowRequested(int currentRow)
 {
     if ((currentRow >= 0) && (currentRow < m_dataModel->rowCount()))
     {
-        qDebug() << "Delete Row: " << currentRow << endl;
+        QString message = "Delete Row: %1";
+        emit notifyStatus(message.arg(currentRow));
         m_dataModel->removeRow(currentRow);
         m_dataModel->submitAll();
     }
@@ -125,12 +128,13 @@ void ViewModelTransactionHandler::onDeleteRowRequested(int currentRow)
 
 void ViewModelTransactionHandler::onDbExportRequest(QString filePath)
 {
-    qDebug() << "Exporting to file: " << filePath << "..." << endl;
+    emit notifyStatus("Exporting to file: " + filePath + "...");
+
     bool success = m_dataModel->exportDataToFile(filePath);
     if (success)
-        qDebug() << "Export successfull!" << endl;
+        emit notifyStatus("Export successfull!");
     else
-        qDebug() << "Export failed!" << endl;
+        emit notifyStatus("Export failed!");
 
 }
 

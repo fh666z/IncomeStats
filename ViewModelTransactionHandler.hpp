@@ -25,7 +25,7 @@ public:
     bool connectSignals(QQmlApplicationEngine &qmlEngine);
 
 signals:
-    void notifyUIStatus(QString status);
+    Q_SIGNAL void notifyStatus(QString status);
 
 public slots:
     void onAcceptOrderButtonPressed(int currentRow, QDateTime date, QString amount, QVariant type, QString comment);
