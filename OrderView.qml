@@ -210,14 +210,14 @@ Window {
         onCalendarDateChanged: dateChosen = calendarDate
     }
 
-    function showAddDialog(){
+    function showAddDialog() {
         title           = "Add new ...";
         btnAcceptText   = "Add";
         recordIndex     =  -1;
         show();
     }
 
-    function showEditDialog(){
+    function showEditDialog() {
         if (dataTableId.selectedRow === -1)
         {
             messageDlg.text = "Please select record first before editing!";

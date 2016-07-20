@@ -8,7 +8,7 @@ Item {
 
     property int tableColumnWidth   : 120
     property int tableMinHeight     : 400
-    property int tableNumColumns    : 4
+    property int tableNumColumns    : 5  // Comment column is double-sized
     property int tableMarginSizePx  : 10
 
     property int     selectedRow    : dataView.currentRow
@@ -85,7 +85,7 @@ Item {
             elideMode: Text.ElideMiddle
             role    : "comment"
             title   : "Comment"
-            width   : tableColumnWidth
+            width   : tableColumnWidth*2
         }
 
         headerDelegate: BorderImage
