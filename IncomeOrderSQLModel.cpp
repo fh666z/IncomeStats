@@ -108,8 +108,6 @@ bool IncomeOrderSQLModel::exportDataToFile(const QString &filePath)
 
         exportFile.close();
     }
-    else
-        qDebug() << "Opening export file" << filePath << "failed!" << endl;
 
     return success;
 }

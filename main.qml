@@ -33,11 +33,19 @@ ApplicationWindow {
             id: statusTextId
             text: qsTr("")
         }
+        Timer {
+            id          : statusClearTimerId
+            interval    : 3000
+            running     : false
+            repeat      : false
+            onTriggered :  statusTextId.text = ""
+        }
     }
     Connections {
         target: viewManagerClass
         onNotifyStatus : {
             statusTextId.text = status
+            statusClearTimerId.start()
         }
     }
 
