@@ -28,7 +28,7 @@ signals:
     Q_SIGNAL void notifyStatus(QString status);
 
 public slots:
-    void onAcceptOrderButtonPressed(int currentRow, QDateTime date, QString amount, QVariant type, QString comment);
+    void onAcceptButtonPressed(int currentRow, QDateTime date, QString amount, QVariant type, QString comment);
     void onDeleteRowRequested(int currentRow);
     void onDbExportRequest(QString filePath);
 

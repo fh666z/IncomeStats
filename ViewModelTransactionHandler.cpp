@@ -76,8 +76,9 @@ bool ViewModelTransactionHandler::connectSignals(QQmlApplicationEngine &qmlEngin
         return false;
     QObject *rootObj = rootObjects[0];
 
-    QObject::connect(rootObj, SIGNAL(orderViewAcceptButtonPressed(int, QDateTime, QString, QVariant, QString)),
-                     this, SLOT(onAcceptOrderButtonPressed(int, QDateTime, QString, QVariant, QString)));
+    QObject *orderView = rootObj->findChild<QObject*>("OrderViewObj");
+    QObject::connect(orderView, SIGNAL(acceptButtonPressed(int, QDateTime, QString, QVariant, QString)),
+                     this, SLOT(onAcceptButtonPressed(int, QDateTime, QString, QVariant, QString)));
 
     QObject::connect(rootObj, SIGNAL(deleteRowRequested(int)), this, SLOT(onDeleteRowRequested(int)));
     QObject::connect(rootObj, SIGNAL(dbExportRequest(QString)), this, SLOT(onDbExportRequest(QString)));
@@ -86,7 +87,7 @@ bool ViewModelTransactionHandler::connectSignals(QQmlApplicationEngine &qmlEngin
     return true;
 }
 
-void ViewModelTransactionHandler::onAcceptOrderButtonPressed(int currentRow, QDateTime date,
+void ViewModelTransactionHandler::onAcceptButtonPressed(int currentRow, QDateTime date,
                                                              QString amount, QVariant type,
                                                              QString comment)
 {

@@ -8,7 +8,8 @@ import QtQuick.Controls.Styles 1.4
 import CPPEnums 1.0
 
 Window {
-    id : orderWindowId
+    id          : orderWindowId
+    objectName  : "OrderViewObj"
 
     flags: Qt.Dialog | Qt.Window
     modality: Qt.WindowModal
@@ -18,6 +19,8 @@ Window {
 
     width: mainGroup.implicitWidth
     height: mainGroup.implicitHeight
+
+    signal acceptButtonPressed(int currentRow, date selectedDate, string amount, variant type, string comment)
 
     property string btnAcceptText
     property int    recordIndex
@@ -159,11 +162,9 @@ Window {
                         }
                         else
                         {
-                            mainWinId.orderViewAcceptButtonPressed(recordIndex,
-                                                                   dateDialogId.selectedDate,
-                                                                   amountFieldId.text,
-                                                                   typeCombo.currentIndex+1,
-                                                                   commentTextId.text)
+                            acceptButtonPressed(recordIndex, dateDialogId.selectedDate,
+                                                amountFieldId.text, typeCombo.currentIndex+1,
+                                                commentTextId.text)
                             close()
                         }
                     }
@@ -180,8 +181,7 @@ Window {
         }
     }
 
-    Component
-    {
+    Component {
         id: defaultFieldStyle
         TextFieldStyle {
             textColor: "black"
@@ -193,8 +193,7 @@ Window {
         }
     }
 
-    Component
-    {
+    Component {
         id: warningFieldStyle
         TextFieldStyle {
             textColor: "red"
@@ -237,12 +236,4 @@ Window {
         }
     }
 }
-
-
-
-
-
-
-
-
 

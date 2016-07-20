@@ -17,8 +17,6 @@ ApplicationWindow {
     height  : windowMinHeight
     visible : true
 
-
-    signal orderViewAcceptButtonPressed(int currentRow, date selectedDate, string amount, variant type, string comment)
     signal deleteRowRequested(int currentRow)
     signal dbExportRequest(string outFile)
 
