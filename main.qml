@@ -22,82 +22,19 @@ ApplicationWindow {
     signal deleteRowRequested(int currentRow)
     signal dbExportRequest(string outFile)
 
+    Connections {
+        target: viewManagerClass
+        onNotifyStatus : statusText = status
+    }
+
     contentItem {
         minimumHeight: windowMinHeight
         minimumWidth : windowMinWidth
     }
 
-    menuBar: MenuBar {
-        id : mainMenuId
-
-        Menu {
-            title: "&Program"
-
-            MenuItem {
-                text    : qsTr("&Login")
-                shortcut: "Ctrl+L"
-            }
-
-            MenuItem {
-                text    : qsTr("&Import Data")
-                shortcut: "Ctrl+I"
-                onTriggered: importExportFileDlg.open()
-            }
-
-            MenuItem {
-                text    : qsTr("E&xport Data")
-                shortcut: "Ctrl+X"
-                onTriggered: {
-                    importExportDlg.selectExisting = false
-                    importExportDlg.operation = "export"
-                    importExportDlg.open()
-                }
-            }
-
-            MenuItem {
-                text        : qsTr("E&xit")
-                shortcut    : StandardKey.Quit
-                onTriggered : Qt.quit()
-            }
-        }
-        Menu {
-            title: "Income &Order"
-            MenuItem {
-                text        : qsTr("&Add ..")
-                shortcut    : "Ctrl+A"
-                onTriggered : newOrderWindow.show()
-            }
-
-            MenuItem {
-                text        : qsTr("&Edit ..")
-                shortcut    : "Ctrl+E"
-                onTriggered : showEditDialog()
-            }
-
-            MenuItem {
-                text        : qsTr("&Remove")
-                shortcut    : "Ctrl+D"
-                onTriggered : deleteRowRequested(dataTableId.selectedRow)
-            }
-        }
+    menuBar: MainMenu {
+        id: mainMenuId
     }
-
-    Column {
-        id                  : contentColumn
-        anchors.fill        : parent
-        anchors.topMargin   :  dataTableId.tableMarginSizePx
-        anchors.leftMargin  : dataTableId.tableMarginSizePx
-        padding             : 10
-
-        DataTableView {
-            id          : dataTableId
-        }
-    }
-
-    onNotifyUIStatus {
-        statusText = "Shano"
-    }
-
 
     statusBar: StatusBar {
         id: appStatusBar
@@ -107,19 +44,35 @@ ApplicationWindow {
         }
     }
 
+    // TableView with all records
+    Column {
+        id                  : contentColumn
+        anchors.fill        : parent
+        anchors.topMargin   : dataTableId.tableMarginSizePx
+        anchors.leftMargin  : dataTableId.tableMarginSizePx
+        padding             : 10
+
+        DataTableView {
+            id              : dataTableId
+        }
+    }
+
+    // Window for NEW order
     OrderView {
         id              : newOrderWindow
         title           : "Add new ..."
         btnAcceptText   : "Add"
-        //recordIndex     : -1
+        recordIndex     : -1
     }
 
+    // Windows for EDITING orders
     OrderView {
         id              : editOrderWindow
         title           : "Edit Order ..."
         btnAcceptText   : "Edit"
     }
 
+    // Message dialog for errors/warnings
     MessageDialog {
         id          : messageDlg
         title       : "Information"
@@ -128,24 +81,9 @@ ApplicationWindow {
         onAccepted  : close()
     }
 
-    FileDialog {
+    // Dialog window for selecting file for Import/Export
+    ImportExport {
         id: importExportDlg
-
-        property string operation
-
-        title: "Please choose a CSV file to " + operation
-
-        folder: shortcuts.home
-        modality: Qt.WindowModal
-        nameFilters: [ "CSV files (*.csv)"]
-        onAccepted: {
-            mainWinId.dbExportRequest(importExportDlg.fileUrl)
-            close()
-        }
-        onRejected: {
-            console.log("Canceled")
-            close()
-        }
     }
 
     function enableMainView()
@@ -161,17 +99,17 @@ ApplicationWindow {
     function showEditDialog(){
         if (dataTableId.selectedRow === -1)
         {
-            messageDlg.text = "Please select record first before editing!"
-            messageDlg.open()
+            messageDlg.text = "Please select record first before editing!";
+            messageDlg.open();
         }
         else
         {
-            editOrderWindow.recordIndex = dataTableId.selectedRow
-            editOrderWindow.dateChosen  = dataTableId.selectedDate
-            editOrderWindow.amountText  = dataTableId.selectedAmount
-            editOrderWindow.typeIndex   = incomeTypeModel.getIndexFromString(dataTableId.selectedType)
-            editOrderWindow.commentText = dataTableId.selectedComment
-            editOrderWindow.show()
+            editOrderWindow.recordIndex = dataTableId.selectedRow;
+            editOrderWindow.dateChosen  = dataTableId.selectedDate;
+            editOrderWindow.amountText  = dataTableId.selectedAmount;
+            editOrderWindow.typeIndex   = incomeTypeModel.getIndexFromString(dataTableId.selectedType);
+            editOrderWindow.commentText = dataTableId.selectedComment;
+            editOrderWindow.show();
         }
     }
 }
