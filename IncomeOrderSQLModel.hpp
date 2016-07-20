@@ -24,6 +24,7 @@ public:
     virtual bool select();
 
     bool exportDataToFile(const QString &filePath);
+    bool importDataFromFile(const QString &filePath);
 
 };
 

@@ -17,7 +17,11 @@ MenuBar {
         MenuItem {
             text    : qsTr("&Import Data")
             shortcut: "Ctrl+I"
-            onTriggered: importExportFileDlg.open()
+            onTriggered: {
+                importExportDlg.selectExisting = true
+                importExportDlg.operation = "import"
+                importExportDlg.open()
+            }
         }
         
         MenuItem {

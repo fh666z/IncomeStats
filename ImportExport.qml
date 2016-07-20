@@ -14,7 +14,7 @@ FileDialog {
     modality: Qt.WindowModal
     nameFilters: [ "CSV files (*.csv)"]
     onAccepted: {
-        mainWinId.dbExportRequest(importExportDlg.fileUrl);
+        mainWinId.dbImportExportRequest(operation, importExportDlg.fileUrl);
         close();
     }
     onRejected: {

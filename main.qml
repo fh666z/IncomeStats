@@ -16,7 +16,7 @@ ApplicationWindow {
     visible : true
 
     signal deleteRowRequested(int currentRow)
-    signal dbExportRequest(string outFile)
+    signal dbImportExportRequest(string operation, string outFile)
 
     contentItem {
         minimumHeight: windowMinHeight

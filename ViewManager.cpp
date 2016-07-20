@@ -72,7 +72,8 @@ bool ViewManager::connectSignals(QQmlApplicationEngine &qmlEngine)
                      this, SLOT(onAcceptButtonPressed(int, QDateTime, QString, QVariant, QString)));
 
     QObject::connect(rootObj, SIGNAL(deleteRowRequested(int)),  this, SLOT(onDeleteRowRequested(int)));
-    QObject::connect(rootObj, SIGNAL(dbExportRequest(QString)), this, SLOT(onDbExportRequest(QString)));
+    QObject::connect(rootObj,   SIGNAL(dbImportExportRequest(QString, QString)),
+                     this,      SLOT(onDbImportExportRequest(QString, QString)));
 
     return true;
 }
@@ -150,15 +151,31 @@ void ViewManager::onDeleteRowRequested(int currentRow)
     }
 }
 
-void ViewManager::onDbExportRequest(QString filePath)
+void ViewManager::onDbImportExportRequest(QString operation, QString filePath)
 {
-    emit notifyStatus("Exporting to file: " + filePath + "...");
+    bool success;
+    if (operation == "export")
+    {
+        emit notifyStatus("Exporting to file: " + filePath + "...");
 
-    bool success = m_dataModel->exportDataToFile(filePath);
-    if (success)
-        emit notifyStatus("Export successfull!");
+        success = m_dataModel->exportDataToFile(filePath);
+    }
+    else if (operation == "import")
+    {
+        if (m_dataModel->rowCount() != 0)
+        {
+            emit notifyError("Cannot import when database is not empty!", "", false);
+            return;
+        }
+        success = m_dataModel->importDataFromFile(filePath);
+    }
     else
-        emit notifyStatus("Export failed!");
+        emit notifyError("Unsupported operation requested", operation, false);
+
+    if (success)
+        emit notifyStatus("Operation " + operation + " successfull!");
+    else
+        emit notifyStatus("Operation " + operation + " failed!");
 
 }
 

@@ -32,7 +32,7 @@ signals:
 public slots:
     void onAcceptButtonPressed(int currentRow, QDateTime date, QString amount, QVariant type, QString comment);
     void onDeleteRowRequested(int currentRow);
-    void onDbExportRequest(QString filePath);
+    void onDbImportExportRequest(QString operation, QString filePath);
 
 protected:
     ViewManager(QObject *parent =    nullptr);
