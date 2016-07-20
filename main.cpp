@@ -3,20 +3,20 @@
 #include <QIcon>
 
 
-#include "ViewModelTransactionHandler.hpp"
+#include "ViewManager.hpp"
 
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
     QQmlApplicationEngine engine;
 
-    ViewModelTransactionHandler::getHandler()->createModels(&app);
-    ViewModelTransactionHandler::getHandler()->registerTypes();
-    ViewModelTransactionHandler::getHandler()->connectModelsToView(engine);
+    ViewManager::getHandler()->createModels(&app);
+    ViewManager::getHandler()->registerTypes();
+    ViewManager::getHandler()->connectModelsToView(engine);
 
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
 
-    ViewModelTransactionHandler::getHandler()->connectSignals(engine);
+    ViewManager::getHandler()->connectSignals(engine);
 
     return app.exec();
 }

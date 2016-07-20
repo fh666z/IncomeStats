@@ -34,7 +34,6 @@ ApplicationWindow {
             text: qsTr("")
         }
     }
-
     Connections {
         target: viewManagerClass
         onNotifyStatus : {
@@ -62,11 +61,27 @@ ApplicationWindow {
 
     // Message dialog for errors/warnings
     MessageDialog {
+        property bool exitAfterClose
+
         id          : messageDlg
         title       : "Information"
         icon        : StandardIcon.Information
         modality    : Qt.WindowModal
-        onAccepted  : close()
+        onAccepted  : {
+            if (exitAfterClose)
+                Qt.quit()
+            else
+                close()
+        }
+    }
+    Connections {
+        target: viewManagerClass
+        onNotifyError : {
+            messageDlg.text = errText
+            messageDlg.detailedText = errDetailedText
+            messageDlg.exitAfterClose = shouldExit
+            messageDlg.open()
+        }
     }
 
     // Dialog window for selecting file for Import/Export

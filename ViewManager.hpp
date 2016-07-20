@@ -11,13 +11,13 @@ class QQmlApplicationEngine;
 class IncomeOrderSQLModel;
 
 
-class ViewModelTransactionHandler : public QObject
+class ViewManager : public QObject
 {
     Q_OBJECT
 
 public:
-    static ViewModelTransactionHandler *getHandler();
-    ~ViewModelTransactionHandler();
+    static ViewManager *getHandler();
+    ~ViewManager();
 
     bool createModels(QObject *parent);
     void registerTypes();
@@ -26,6 +26,7 @@ public:
 
 signals:
     Q_SIGNAL void notifyStatus(QString status);
+    Q_SIGNAL void notifyError(QString errText = "", QString errDetailedText = "", bool shouldExit = false);
 
 public slots:
     void onAcceptButtonPressed(int currentRow, QDateTime date, QString amount, QVariant type, QString comment);
@@ -33,10 +34,10 @@ public slots:
     void onDbExportRequest(QString filePath);
 
 protected:
-    ViewModelTransactionHandler(QObject *parent =    nullptr);
+    ViewManager(QObject *parent =    nullptr);
 
 private:
-    static ViewModelTransactionHandler *m_dataHandler;
+    static ViewManager *m_dataHandler;
 
     IncomeOrderSQLModel     *m_dataModel;
     IncomeTypeModel         *m_typeModel;

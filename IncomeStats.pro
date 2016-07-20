@@ -18,7 +18,7 @@ SOURCES += main.cpp \
     SQLStorage.cpp \
     IncomeOrderSQLModel.cpp \
     IncomeType.cpp \
-    ViewModelTransactionHandler.cpp
+    ViewManager.cpp
 
 RESOURCES += qml.qrc
 
@@ -35,7 +35,7 @@ HEADERS += \
     SQLStorage.hpp \
     IncomeOrderSQLModel.hpp \
     IncomeType.hpp \
-    ViewModelTransactionHandler.hpp
+    ViewManager.hpp
 
 DISTFILES += \
     images/app_icon.ico
